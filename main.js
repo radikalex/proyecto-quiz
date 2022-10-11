@@ -1,5 +1,7 @@
 
 const divPregunta = document.getElementById('pregunta')
+const divQuestion = document.getElementById('question')
+
 let nota = 0;
 let indexPregunta = 0;
 
@@ -63,15 +65,13 @@ const questions = {
             ]
         },
         {
-            "category": "History",
-            "type": "multiple",
-            "difficulty": "hard",
-            "question": "The Battle of Hastings was fought in which year?",
-            "correct_answer": "1066",
+            "category": "Entertainment: Television",
+            "type": "boolean",
+            "difficulty": "medium",
+            "question": "In &quot;Star Trek&quot;, Klingons are commonly referred to as &quot;Black Elves&quot;.",
+            "correct_answer": "False",
             "incorrect_answers": [
-                "911",
-                "1204",
-                "1420"
+              "True"
             ]
         },
         {
@@ -122,7 +122,7 @@ const questions = {
         }
     ]
 }
-
+ 
 function ponerPregunta(pregunta) {
 
     // Borrar pregunta anterior si hay
@@ -130,29 +130,59 @@ function ponerPregunta(pregunta) {
         divPregunta.removeChild(divPregunta.firstChild)
     }
 
+    // Numero de pregunta y puntuación
+    const divHeader = document.getElementById('pregunta-header')
+    divHeader.innerHTML = `<span>Pregunta ${indexPregunta + 1}</span> <span>Puntuación: <span id='nota'>${nota}<span>/10 </span>`
+
+    // Poner la pregunta
     const divPreguntaActual = document.createElement('div');
     divPreguntaActual.innerHTML = `<h1>${pregunta.question}</h1>`;
     divPregunta.appendChild(divPreguntaActual);
 
+    // Generar respuestas a la pregunta
     const respuestas = [pregunta.correct_answer, ...pregunta.incorrect_answers]
-    // Si la pregunta no es de true o false desordenarla
+    const hexaColors = pregunta.type !== 'boolean' ? ['#E11B3E', '#1467CF', '#D69E01', '#28880D'] : ['#00FF48', '#FF0000']; 
     if(pregunta.type !== 'boolean') {
-        console.log(pregunta.type);
+        // Desordenar las respuestas si no son solo True o False
         desordenarRespuestas(respuestas);
     }
-    const divRespuestas = document.createElement('div')
-    for (const respuesta of respuestas) {
-        const button = document.createElement('button')
-        button.innerText = respuesta
-        button.addEventListener('click', preguntaRespondida)
-        divRespuestas.appendChild(button)
-    }
-    divPregunta.appendChild(divRespuestas);
+    crearRespuestas(respuestas, hexaColors)
 
-    const btn_siguientePregunta = document.createElement('button')
-    btn_siguientePregunta.innerText = "Siguiente Pregunta"
-    btn_siguientePregunta.addEventListener('click', siguientePregunta)
-    divPregunta.appendChild(btn_siguientePregunta)
+
+    // Boton para pasar a la siguiente pregunta
+    if(questions.results.length > indexPregunta + 1) {
+        const btn_siguientePregunta = document.createElement('button')
+        btn_siguientePregunta.className = "btn btn-primary siguiente-pregunta"
+        btn_siguientePregunta.innerHTML = "Siguiente Pregunta"
+        btn_siguientePregunta.disabled = true;
+        btn_siguientePregunta.addEventListener('click', siguientePregunta)
+        divPregunta.appendChild(btn_siguientePregunta)
+    } else {
+        indexPregunta = 0;
+        const btn_siguientePregunta = document.createElement('button')
+        btn_siguientePregunta.className = "btn btn-primary siguiente-pregunta"
+        btn_siguientePregunta.innerHTML = "Reiniciar Test"
+        btn_siguientePregunta.addEventListener('click', () => {
+            nota = 0;
+            ponerPregunta(questions.results[indexPregunta]);
+        })
+        divPregunta.appendChild(btn_siguientePregunta)
+    }
+}
+
+function crearRespuestas(respuestas, hexaColors) {
+    
+    const divRespuestasMultiples = document.createElement('div')
+    divRespuestasMultiples.className = "contenedor-respuestas-multiples"
+    for (let i = 0; i < respuestas.length; i++) {
+        const button = document.createElement('button')
+        button.innerHTML = respuestas[i]
+        button.className = "respuesta"
+        button.style.backgroundColor = hexaColors[i];
+        button.addEventListener('click', preguntaRespondida)
+        divRespuestasMultiples.appendChild(button);
+    }
+    divPregunta.appendChild(divRespuestasMultiples);
 }
 
 function siguientePregunta(e) {
@@ -161,11 +191,24 @@ function siguientePregunta(e) {
 }
 
 function preguntaRespondida() {
+    document.querySelector('.siguiente-pregunta').disabled = false;
     if(preguntaCorrecta(this.innerText)) {
         nota++;
     } else {
-        if(nota !== 0)
-            nota--;
+        // if(nota !== 0)
+        //     nota--;
+    }
+    deshabilitarRespuestas();
+    document.getElementById('nota').innerText = `${nota}/10`
+}
+
+function deshabilitarRespuestas() {
+    const respuestas = document.getElementsByClassName("respuesta");
+    console.log(respuestas);
+    for (const respuesta of respuestas) {
+        respuesta.disabled = true;
+        if(!preguntaCorrecta(respuesta.innerText))
+            respuesta.classList.add('respuesta-incorrecta')
     }
 }
 
