@@ -124,7 +124,7 @@ const questions = {
     ]
 }
  
-/* --------------------------------------------- Lógica del quiz ---------------------------------- */
+/* -------------------------------- Lógica del quiz ---------------------------------- */
 
 function ponerPregunta(pregunta) {
 
@@ -143,11 +143,15 @@ function ponerPregunta(pregunta) {
     divPregunta.appendChild(divPreguntaActual);
 
     // Generar respuestas a la pregunta
-    const respuestas = [pregunta.correct_answer, ...pregunta.incorrect_answers]
-    const hexaColors = pregunta.type !== 'boolean' ? ['#E11B3E', '#1467CF', '#D69E01', '#28880D'] : ['#00FF48', '#FF0000']; 
+    let respuestas, hexaColors;
     if(pregunta.type !== 'boolean') {
+        respuestas = [pregunta.correct_answer, ...pregunta.incorrect_answers]
         // Desordenar las respuestas si no son solo True o False
         desordenarRespuestas(respuestas);
+        hexaColors = ['#E11B3E', '#1467CF', '#D69E01', '#28880D'];
+    } else {
+        respuestas = ['True', 'False']
+        hexaColors = ['#00FF48', '#FF0000'];
     }
     crearRespuestas(respuestas, hexaColors)
 
@@ -211,7 +215,13 @@ function deshabilitarRespuestas() {
 }
 
 function preguntaCorrecta(respuesta) {
-    return respuesta === questions.results[indexPregunta].correct_answer;
+    return respuesta === decodeHtml(questions.results[indexPregunta].correct_answer);
+}
+
+function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
 }
 
 // Función para 'barajar' un array. Obtenido de StackOverflow
