@@ -1,6 +1,7 @@
-
+const divHome = document.getElementById('home')
 const divPregunta = document.getElementById('pregunta')
 const divQuestion = document.getElementById('question')
+const divResult = document.getElementById('result')
 
 let nota = 0;
 let indexPregunta = 0;
@@ -123,6 +124,8 @@ const questions = {
     ]
 }
  
+/* --------------------------------------------- Lógica del quiz ---------------------------------- */
+
 function ponerPregunta(pregunta) {
 
     // Borrar pregunta anterior si hay
@@ -158,14 +161,10 @@ function ponerPregunta(pregunta) {
         btn_siguientePregunta.addEventListener('click', siguientePregunta)
         divPregunta.appendChild(btn_siguientePregunta)
     } else {
-        indexPregunta = 0;
         const btn_siguientePregunta = document.createElement('button')
         btn_siguientePregunta.className = "btn btn-primary siguiente-pregunta"
-        btn_siguientePregunta.innerHTML = "Reiniciar Test"
-        btn_siguientePregunta.addEventListener('click', () => {
-            nota = 0;
-            ponerPregunta(questions.results[indexPregunta]);
-        })
+        btn_siguientePregunta.innerHTML = "Finalizar Test"
+        btn_siguientePregunta.addEventListener('click', finalizarTest)
         divPregunta.appendChild(btn_siguientePregunta)
     }
 }
@@ -204,7 +203,6 @@ function preguntaRespondida() {
 
 function deshabilitarRespuestas() {
     const respuestas = document.getElementsByClassName("respuesta");
-    console.log(respuestas);
     for (const respuesta of respuestas) {
         respuesta.disabled = true;
         if(!preguntaCorrecta(respuesta.innerText))
@@ -236,4 +234,81 @@ function desordenarRespuestas(respuestas) {
     return respuestas;
 }
 
-ponerPregunta(questions.results[indexPregunta])
+function finalizarTest() {
+    divQuestion.classList.remove('question');
+    divQuestion.classList.add('hide');
+    divResult.classList.remove('hide');
+    divResult.classList.add('result');
+    mostrarResultado();
+}
+
+/* --------------------------------------------- Lógica del resultado ---------------------------------- */
+
+function mostrarResultado() {
+    let gif_Url, clase_gif;
+    switch(nota) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088200159252/1-4.gif";
+            clase_gif = 'gif-resultado-small';
+            break;
+        case 5:
+        case 6:
+            gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088627966102/5-6.gif";
+            clase_gif = 'gif-resultado';
+            break;
+        case 7:
+        case 8:
+            gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089085157406/7-8.gif";
+            clase_gif = 'gif-resultado';
+            break;
+        case 9:
+        case 10:
+            gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089559097424/9-10.gif";
+            clase_gif = 'gif-resultado';
+            break;
+        default:
+            console.log('Algo no ha ido bien');
+    }
+    divResult.innerHTML = 
+    `
+    <h1>Tu puntuación es de ${nota}/10</h1>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita ab sit repellendus fugit totam iusto ad soluta, quaerat in maxime nam repudiandae earum itaque velit cupiditate minima aut quas quam?</p>
+    <img src="${gif_Url}" alt="asdf" class="${clase_gif}">
+    <div class="botones-result">
+        <button class="btn btn-primary" onclick="reiniciarTest()">Reiniciar test</button>
+        <button class="btn btn-primary" onclick="irPaginaPrincipal()">Ir a la página principal</button>
+    </div> 
+    `
+}
+function reiniciarTest() {
+    divQuestion.classList.add('question');
+    divQuestion.classList.remove('hide');
+    divResult.classList.add('hide');
+    divResult.classList.remove('result');
+    nota = 0;
+    indexPregunta = 0;
+    ponerPregunta(questions.results[indexPregunta]);
+}
+
+function irPaginaPrincipal() {
+    divResult.classList.add('hide');
+    divResult.classList.remove('result');
+    divHome.classList.remove('hide');
+    divHome.classList.add('home');
+}
+
+/* --------------------------------------------- Lógica de página principal ---------------------------------- */
+
+function comenzarTest() {
+    indexPregunta = 0;
+    nota = 0;
+    divHome.classList.add('hide');
+    divHome.classList.remove('home');
+    divQuestion.classList.add('question');
+    divQuestion.classList.remove('hide');
+    ponerPregunta(questions.results[indexPregunta])
+}
