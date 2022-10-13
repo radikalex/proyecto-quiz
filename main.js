@@ -4,6 +4,7 @@ const divQuestion = document.getElementById('question')
 const divResult = document.getElementById('result')
 
 let nota = 0;
+let numPreguntas = 0;
 let indexPregunta = 0;
 
 // Preguntas para hacer pruebas antes de usar la API
@@ -20,6 +21,9 @@ function obtenerPreguntas() {
         .get(`https://opentdb.com/api.php?amount=${cantidad}&category=${categoria}&difficulty=${dificultad}`) 
         .then((res) => {
             questions = res.data;
+            numPreguntas = cantidad;
+            divQuestion.classList.add('question');
+            divQuestion.classList.remove('hide');
             ponerPregunta(questions.results[indexPregunta])
         })
         .catch((err) => console.error(err));
@@ -34,7 +38,7 @@ function ponerPregunta(pregunta) {
 
     // Numero de pregunta y puntuación
     const divHeader = document.getElementById('pregunta-header')
-    divHeader.innerHTML = `<span>Pregunta ${indexPregunta + 1}</span> <span>Puntuación: <span id='nota'>${nota}<span>/10 </span>`
+    divHeader.innerHTML = `<span>Pregunta ${indexPregunta + 1}</span> <span>Puntuación: <span id='nota'>${nota}<span>/${numPreguntas} </span>`
 
     // Poner la pregunta
     const divPreguntaActual = document.createElement('div');
@@ -101,7 +105,7 @@ function preguntaRespondida() {
         //     nota--;
     }
     deshabilitarRespuestas();
-    document.getElementById('nota').innerText = `${nota}/10`
+    document.getElementById('nota').innerText = `${nota}/${numPreguntas}`
 }
 
 function deshabilitarRespuestas() {
@@ -155,27 +159,21 @@ function finalizarTest() {
 
 function mostrarResultado() {
     let gif_Url, clase_gif;
-    switch(nota) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
+    const porcentajeAciertos = obtenerPorcentajeNota();
+    switch(true) {
+        case porcentajeAciertos <= 40:
             gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088200159252/1-4.gif";
             clase_gif = 'gif-resultado-small';
             break;
-        case 5:
-        case 6:
+        case porcentajeAciertos <= 60:
             gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088627966102/5-6.gif";
             clase_gif = 'gif-resultado';
             break;
-        case 7:
-        case 8:
+        case porcentajeAciertos <= 80:
             gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089085157406/7-8.gif";
             clase_gif = 'gif-resultado';
             break;
-        case 9:
-        case 10:
+        case porcentajeAciertos > 80:
             gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089559097424/9-10.gif";
             clase_gif = 'gif-resultado';
             break;
@@ -184,7 +182,7 @@ function mostrarResultado() {
     }
     divResult.innerHTML = 
     `
-    <h1>Tu puntuación es de ${nota}/10</h1>
+    <h1>Tu puntuación es de ${nota}/${numPreguntas}</h1>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita ab sit repellendus fugit totam iusto ad soluta, quaerat in maxime nam repudiandae earum itaque velit cupiditate minima aut quas quam?</p>
     <img src="${gif_Url}" alt="asdf" class="${clase_gif}">
     <div class="botones-result">
@@ -192,6 +190,10 @@ function mostrarResultado() {
         <button class="btn btn-primary" onclick="irPaginaPrincipal()">Ir a la página principal</button>
     </div> 
     `
+}
+
+function obtenerPorcentajeNota() {
+    return nota*100/numPreguntas;
 }
 
 function reiniciarTest() {
@@ -214,11 +216,9 @@ function irPaginaPrincipal() {
 /* --------------------------------------------- Lógica de página principal ---------------------------------- */
 
 function comenzarTest() {
-    obtenerPreguntas();
     indexPregunta = 0;
     nota = 0;
     divHome.classList.add('hide');
     divHome.classList.remove('home');
-    divQuestion.classList.add('question');
-    divQuestion.classList.remove('hide');
+    obtenerPreguntas();
 }

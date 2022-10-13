@@ -44,15 +44,15 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    min-height: 620px;
+    min-height: 33vw;
 }
 
 .gif-resultado {
-    width: 500px;
+    width: 30vw;
 }
 
 .gif-resultado-small {
-    width: 700px;
+    width: 35vw;
 }
 
 p {
@@ -64,7 +64,7 @@ p {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    min-height: 620px;
+    min-height: 33vw;
     width: 100%;
 }
 
@@ -78,7 +78,7 @@ p {
     background-color:white;
     border-radius: 30px;
     width: 70%;
-    min-height: 700px;
+    min-height: 35vw;
     padding: 40px;
     display: flex;
     flex-direction: column;
@@ -112,7 +112,7 @@ p {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    min-height: 620px;
+    min-height: 33vw;
     width: 100%;
 }
 
