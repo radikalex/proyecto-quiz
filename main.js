@@ -7,124 +7,23 @@ let nota = 0;
 let indexPregunta = 0;
 
 // Preguntas para hacer pruebas antes de usar la API
-const questions = {
-    "response_code": 0,
-    "results": [{
-            "category": "Science: Mathematics",
-            "type": "multiple",
-            "difficulty": "easy",
-            "question": "What&#039;s the square root of 49?",
-            "correct_answer": "7",
-            "incorrect_answers": [
-                "4",
-                "12",
-                "9"
-            ]
-        },
-        {
-            "category": "Sports",
-            "type": "boolean",
-            "difficulty": "medium",
-            "question": "Skateboarding will be included in the 2020 Summer Olympics in Tokyo.",
-            "correct_answer": "True",
-            "incorrect_answers": [
-                "False"
-            ]
-        },
-        {
-            "category": "General Knowledge",
-            "type": "boolean",
-            "difficulty": "easy",
-            "question": "The color orange is named after the fruit.",
-            "correct_answer": "True",
-            "incorrect_answers": [
-                "False"
-            ]
-        },
-        {
-            "category": "Science & Nature",
-            "type": "multiple",
-            "difficulty": "medium",
-            "question": "Which of these is a type of stretch/deep tendon reflex?",
-            "correct_answer": "Ankle jerk reflex",
-            "incorrect_answers": [
-                "Gag reflex",
-                "Pupillary light reflex",
-                "Scratch reflex"
-            ]
-        },
-        {
-            "category": "Entertainment: Video Games",
-            "type": "multiple",
-            "difficulty": "hard",
-            "question": "According to Toby Fox, what was the method to creating the initial tune for Megalovania?",
-            "correct_answer": "Singing into a Microphone",
-            "incorrect_answers": [
-                "Playing a Piano",
-                "Using a Composer Software",
-                "Listened to birds at the park"
-            ]
-        },
-        {
-            "category": "Entertainment: Television",
-            "type": "boolean",
-            "difficulty": "medium",
-            "question": "In &quot;Star Trek&quot;, Klingons are commonly referred to as &quot;Black Elves&quot;.",
-            "correct_answer": "False",
-            "incorrect_answers": [
-              "True"
-            ]
-        },
-        {
-            "category": "Animals",
-            "type": "boolean",
-            "difficulty": "easy",
-            "question": "Cats have whiskers under their legs.",
-            "correct_answer": "True",
-            "incorrect_answers": [
-                "False"
-            ]
-        },
-        {
-            "category": "Entertainment: Board Games",
-            "type": "multiple",
-            "difficulty": "easy",
-            "question": "In board games, an additional or ammended rule that applies to a certain group or place is informally known as a &quot;what&quot; rule?",
-            "correct_answer": "House",
-            "incorrect_answers": [
-                "Custom",
-                "Extra",
-                "Change"
-            ]
-        },
-        {
-            "category": "Entertainment: Japanese Anime & Manga",
-            "type": "multiple",
-            "difficulty": "medium",
-            "question": "Which of the following films was NOT directed by Hayao Miyazaki?",
-            "correct_answer": "Wolf Children",
-            "incorrect_answers": [
-                "Princess Mononoke",
-                "Spirited Away",
-                "Kiki&#039;s Delivery Service"
-            ]
-        },
-        {
-            "category": "Entertainment: Video Games",
-            "type": "multiple",
-            "difficulty": "easy",
-            "question": "Which of the following Zelda games did not feature Ganon as a final boss?",
-            "correct_answer": "Majora&#039;s Mask",
-            "incorrect_answers": [
-                "Ocarina of Time",
-                "Skyward Sword",
-                "Breath of the Wild"
-            ]
-        }
-    ]
-}
+let questions = {}
  
 /* -------------------------------- Lógica del quiz ---------------------------------- */
+
+function obtenerPreguntas() {
+    const cantidad = document.getElementById('cantidad').value;
+    const categoria = document.getElementById('categoria').value;
+    const dificultad = document.getElementById('dificultad').value;
+
+    axios
+        .get(`https://opentdb.com/api.php?amount=${cantidad}&category=${categoria}&difficulty=${dificultad}`) 
+        .then((res) => {
+            questions = res.data;
+            ponerPregunta(questions.results[indexPregunta])
+        })
+        .catch((err) => console.error(err));
+}
 
 function ponerPregunta(pregunta) {
 
@@ -294,6 +193,7 @@ function mostrarResultado() {
     </div> 
     `
 }
+
 function reiniciarTest() {
     divQuestion.classList.add('question');
     divQuestion.classList.remove('hide');
@@ -314,11 +214,11 @@ function irPaginaPrincipal() {
 /* --------------------------------------------- Lógica de página principal ---------------------------------- */
 
 function comenzarTest() {
+    obtenerPreguntas();
     indexPregunta = 0;
     nota = 0;
     divHome.classList.add('hide');
     divHome.classList.remove('home');
     divQuestion.classList.add('question');
     divQuestion.classList.remove('hide');
-    ponerPregunta(questions.results[indexPregunta])
 }
