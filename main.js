@@ -9,6 +9,12 @@ const mainDiV = document.getElementById('main');
 let nota = 0;
 let numPreguntas = 0;
 let indexPregunta = 0;
+let userName;
+
+
+let quiz_data = JSON.parse(localStorage.getItem("quiz_data")) || {
+    users: []
+};
 
 // Preguntas para hacer pruebas antes de usar la API
 let questions = {}
@@ -42,7 +48,7 @@ function ponerPregunta(pregunta) {
     // Numero de pregunta y puntuación
     const divHeader = document.getElementById('pregunta-header')
     divHeader.className = 'mb-4'
-    divHeader.innerHTML = `<span>Pregunta ${indexPregunta + 1}</span> <span>Puntuación: <span id='nota'>${nota}<span>/${numPreguntas} </span>`
+    divHeader.innerHTML = `<span>Question ${indexPregunta + 1}</span> <span>Score: <span id='nota'>${nota}<span>/${numPreguntas} </span>`
 
     // Poner la pregunta
     const divPreguntaActual = document.createElement('div');
@@ -67,14 +73,14 @@ function ponerPregunta(pregunta) {
     if(questions.results.length > indexPregunta + 1) {
         const btn_siguientePregunta = document.createElement('button')
         btn_siguientePregunta.className = "btn-comenzar siguiente-pregunta"
-        btn_siguientePregunta.innerHTML = "Siguiente Pregunta"
+        btn_siguientePregunta.innerHTML = "Next Question"
         btn_siguientePregunta.disabled = true;
         btn_siguientePregunta.addEventListener('click', siguientePregunta)
         divPregunta.appendChild(btn_siguientePregunta)
     } else {
         const btn_siguientePregunta = document.createElement('button')
         btn_siguientePregunta.className = "btn-comenzar siguiente-pregunta"
-        btn_siguientePregunta.innerHTML = "Finalizar Test"
+        btn_siguientePregunta.innerHTML = "End Quiz"
         btn_siguientePregunta.addEventListener('click', finalizarTest)
         divPregunta.appendChild(btn_siguientePregunta)
     }
@@ -159,7 +165,47 @@ function finalizarTest() {
     mainDiV.className = "hqr-contenedor"
     divResult.classList.replace('hide', 'result');
     divQuestion.classList.replace('question', 'hide');
+    saveDataToLocalStorage();
     mostrarResultado();
+}
+
+function saveDataToLocalStorage() {
+    const userPos = findUserByName();
+
+    console.log(userPos);
+
+    if( userPos > -1 ) {
+        // Old user
+        quiz_data.users[userPos].quizsDone.push({
+            numQuestions: numPreguntas,
+            correct_answer: nota,
+            incorrect_answers: numPreguntas - nota
+        })
+    }
+    else {
+        // New Usuario
+        quiz_data.users.push({
+            name: userName,
+            quizsDone: [{
+                numQuestions: numPreguntas,
+                correct_answer: nota,
+                incorrect_answers: numPreguntas - nota
+            }] 
+        })
+    }
+    localStorage.setItem('quiz_data', JSON.stringify(quiz_data));
+}
+
+function findUserByName() {
+    for (let i = 0; i < quiz_data.users.length; i++) {
+        console.log(userName);
+        console.log(quiz_data.users[i].name);
+        if(userName === quiz_data.users[i].name) {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 /* --------------------------------------------- Lógica del resultado ---------------------------------- */
@@ -189,12 +235,12 @@ function mostrarResultado() {
     }
     divResult.innerHTML =
     `
-    <h1>Tu puntuación es de ${nota}/${numPreguntas}</h1>
+    <h1>Your score was ${nota}/${numPreguntas}</h1>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita ab sit repellendus fugit totam iusto ad soluta, quaerat in maxime nam repudiandae earum itaque velit cupiditate minima aut quas quam?</p>
     <img src="${gif_Url}" alt="asdf" class="${clase_gif}">
     <div class="botones-result">
-        <button class="btn-comenzar" onclick="reiniciarTest()">Reiniciar test</button>
-        <button class="btn-comenzar" onclick="irPaginaPrincipal()">Ir a la página principal</button>
+        <button class="btn-comenzar" onclick="reiniciarTest()">Restart Quiz</button>
+        <button class="btn-comenzar" onclick="irPaginaPrincipal()">Go to main page</button>
     </div> 
     `
 }
@@ -205,6 +251,7 @@ function obtenerPorcentajeNota() {
 
 function reiniciarTest() {
     divResult.classList.replace('result', 'hide');
+    divLoading.classList.replace('hide', 'loading');
     nota = 0;
     indexPregunta = 0;
     obtenerPreguntas();
@@ -217,13 +264,9 @@ function irPaginaPrincipal() {
 
 /* --------------------------------------- Lógica de página principal ---------------------------------- */
 
-{/* <div class="spinner-border text-primary" role="status">
-  <span class="sr-only">Loading...</span>
-</div> */}
-
 function comenzarTest() {
-    divLoading.classList.remove('hide');
-    divLoading.classList.add('loading')
+    divLoading.classList.replace('hide', 'loading');
+    userName = document.getElementById('name').value.trim();
     indexPregunta = 0;
     nota = 0;
     divHome.classList.replace('home', 'hide')

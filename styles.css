@@ -3,7 +3,7 @@
 
 :root {
     --altura-header: 0px;
-    --altura-footer: 0px;
+    --altura-footer: 45px;
 }
 
 html, body {
@@ -27,6 +27,9 @@ header {
 
 footer {
     height: var(--altura-footer);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
     /* background-color: aqua; */
 }
 
@@ -224,3 +227,12 @@ p {
     opacity: 0.35;
 }
 
+.copyright {
+    color: grey; 
+}
+
+.logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 30px;
+  }
