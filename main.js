@@ -2,6 +2,8 @@ const divHome = document.getElementById('home')
 const divPregunta = document.getElementById('pregunta')
 const divQuestion = document.getElementById('question')
 const divResult = document.getElementById('result')
+const divPrincipal = document.getElementById('contenedor-principal');
+const divLoading = document.getElementById('loading')
 
 let nota = 0;
 let numPreguntas = 0;
@@ -9,7 +11,7 @@ let indexPregunta = 0;
 
 // Preguntas para hacer pruebas antes de usar la API
 let questions = {}
- 
+
 /* -------------------------------- Lógica del quiz ---------------------------------- */
 
 function obtenerPreguntas() {
@@ -18,10 +20,12 @@ function obtenerPreguntas() {
     const dificultad = document.getElementById('dificultad').value;
 
     axios
-        .get(`https://opentdb.com/api.php?amount=${cantidad}&category=${categoria}&difficulty=${dificultad}`) 
+        .get(`https://opentdb.com/api.php?amount=${cantidad}&category=${categoria}&difficulty=${dificultad}`)
         .then((res) => {
             questions = res.data;
             numPreguntas = cantidad;
+            divLoading.classList.add('hide')
+            divLoading.classList.remove('loading')
             divQuestion.classList.add('question');
             divQuestion.classList.remove('hide');
             ponerPregunta(questions.results[indexPregunta])
@@ -77,7 +81,7 @@ function ponerPregunta(pregunta) {
 }
 
 function crearRespuestas(respuestas, hexaColors) {
-    
+
     const divRespuestasMultiples = document.createElement('div')
     divRespuestasMultiples.className = "contenedor-respuestas-multiples"
     for (let i = 0; i < respuestas.length; i++) {
@@ -115,10 +119,11 @@ function deshabilitarRespuestas() {
         if(!preguntaCorrecta(respuesta.innerText))
             respuesta.classList.add('respuesta-incorrecta')
     }
+
 }
 
 function preguntaCorrecta(respuesta) {
-    return respuesta === decodeHtml(questions.results[indexPregunta].correct_answer);
+    return respuesta.trim() === decodeHtml(questions.results[indexPregunta].correct_answer);
 }
 
 function decodeHtml(html) {
@@ -134,16 +139,16 @@ function desordenarRespuestas(respuestas) {
 
     // While there remain elements to shuffle.
     while (indiceActual != 0) {
-  
+
       // Pick a remaining element.
       indiceAleatorio = Math.floor(Math.random() * indiceActual);
       indiceActual--;
-  
+
       // And swap it with the current element.
       [respuestas[indiceActual], respuestas[indiceAleatorio]] = [
         respuestas[indiceAleatorio], respuestas[indiceActual]];
     }
-  
+
     return respuestas;
 }
 
@@ -180,7 +185,7 @@ function mostrarResultado() {
         default:
             console.log('Algo no ha ido bien');
     }
-    divResult.innerHTML = 
+    divResult.innerHTML =
     `
     <h1>Tu puntuación es de ${nota}/${numPreguntas}</h1>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita ab sit repellendus fugit totam iusto ad soluta, quaerat in maxime nam repudiandae earum itaque velit cupiditate minima aut quas quam?</p>
@@ -188,7 +193,7 @@ function mostrarResultado() {
     <div class="botones-result">
         <button class="btn btn-primary" onclick="reiniciarTest()">Reiniciar test</button>
         <button class="btn btn-primary" onclick="irPaginaPrincipal()">Ir a la página principal</button>
-    </div> 
+    </div>
     `
 }
 
@@ -215,10 +220,17 @@ function irPaginaPrincipal() {
 
 /* --------------------------------------------- Lógica de página principal ---------------------------------- */
 
+{/* <div class="spinner-border text-primary" role="status">
+  <span class="sr-only">Loading...</span>
+</div> */}
+
 function comenzarTest() {
+    divLoading.classList.remove('hide');
+    divLoading.classList.add('loading')
     indexPregunta = 0;
     nota = 0;
     divHome.classList.add('hide');
     divHome.classList.remove('home');
     obtenerPreguntas();
+    
 }

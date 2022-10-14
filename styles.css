@@ -39,6 +39,31 @@ main {
     width: 80%;
 }
 
+.loading {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 33vw;
+}
+
+.spinner-border {
+    width: 2vw;
+    height: 2vw;
+}
+
+.container-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.text-loading {
+    color: #1b67d9;
+    font-size: 20px;
+}
+
 .question {
     width: 100%;
     display: flex;
