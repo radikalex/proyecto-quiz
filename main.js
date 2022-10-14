@@ -2,12 +2,9 @@ const divHome = document.getElementById('home')
 const divPregunta = document.getElementById('pregunta')
 const divQuestion = document.getElementById('question')
 const divResult = document.getElementById('result')
-<<<<<<< HEAD
 const divPrincipal = document.getElementById('contenedor-principal');
 const divLoading = document.getElementById('loading')
-=======
 const mainDiV = document.getElementById('main');
->>>>>>> 7f5f1ee2931794a5bd408173a5cb8d6936e9798c
 
 let nota = 0;
 let numPreguntas = 0;
@@ -28,14 +25,8 @@ function obtenerPreguntas() {
         .then((res) => {
             questions = res.data;
             numPreguntas = cantidad;
-<<<<<<< HEAD
-            divLoading.classList.add('hide')
-            divLoading.classList.remove('loading')
-            divQuestion.classList.add('question');
-            divQuestion.classList.remove('hide');
-=======
+            divLoading.classList.replace('loading', 'hide');
             divQuestion.classList.replace('hide', 'question');
->>>>>>> 7f5f1ee2931794a5bd408173a5cb8d6936e9798c
             ponerPregunta(questions.results[indexPregunta])
         })
         .catch((err) => console.error(err));
@@ -177,7 +168,7 @@ function mostrarResultado() {
     let gif_Url, clase_gif;
     const porcentajeAciertos = obtenerPorcentajeNota();
     switch(true) {
-        case porcentajeAciertos <= 40:
+        case porcentajeAciertos <= 50:
             gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088200159252/1-4.gif";
             clase_gif = 'gif-resultado-small';
             break;
@@ -202,15 +193,9 @@ function mostrarResultado() {
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita ab sit repellendus fugit totam iusto ad soluta, quaerat in maxime nam repudiandae earum itaque velit cupiditate minima aut quas quam?</p>
     <img src="${gif_Url}" alt="asdf" class="${clase_gif}">
     <div class="botones-result">
-<<<<<<< HEAD
-        <button class="btn btn-primary" onclick="reiniciarTest()">Reiniciar test</button>
-        <button class="btn btn-primary" onclick="irPaginaPrincipal()">Ir a la página principal</button>
-    </div>
-=======
         <button class="btn-comenzar" onclick="reiniciarTest()">Reiniciar test</button>
         <button class="btn-comenzar" onclick="irPaginaPrincipal()">Ir a la página principal</button>
     </div> 
->>>>>>> 7f5f1ee2931794a5bd408173a5cb8d6936e9798c
     `
 }
 
