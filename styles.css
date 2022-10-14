@@ -50,13 +50,12 @@ main {
 
 .btn-comenzar{
 
-    box-shadow: rgba(46, 237, 240, 0.4) 0px 5px, rgba(46, 240, 224, 0.66) 0px 10px, rgba(84, 241, 244, 0.2) 0px 15px, rgba(70, 231, 240, 0.1) 0px 20px, rgba(35, 109, 236, 0.05) 0px 25px;
+     box-shadow: rgba(46, 237, 240, 0.4) 0px 5px, rgba(46, 240, 224, 0.66) 0px 10px, rgba(84, 241, 244, 0.2) 0px 15px, rgba(70, 231, 240, 0.1) 0px 20px, rgba(35, 109, 236, 0.05) 0px 25px;
      font-family: 'Ribeye', cursive;
-     font-size: 30px;
+     font-size: 25px;
      background-color: rgba(53, 12, 143, 0.878);
      position: relative;
      display: inline-block;
-     padding: 15px 15px;
      color:rgb(255, 255, 255);
      letter-spacing:  1px;
      text-decoration: none;
@@ -64,6 +63,8 @@ main {
      transition: 0.2s;
      border-radius: 20px;
      cursor: pointer;
+     width: 200px;
+     height: 50px;
 
 }
 
@@ -175,7 +176,7 @@ p {
 .siguiente-pregunta {
     width: 300px;
     font-size: 20px;
-    height: 50px;
+    
     
     
 }
