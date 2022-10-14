@@ -2,6 +2,7 @@ const divHome = document.getElementById('home')
 const divPregunta = document.getElementById('pregunta')
 const divQuestion = document.getElementById('question')
 const divResult = document.getElementById('result')
+const inputAmount = document.getElementById('cantidad')
 
 let nota = 0;
 let numPreguntas = 0;
@@ -222,3 +223,10 @@ function comenzarTest() {
     divHome.classList.remove('home');
     obtenerPreguntas();
 }
+
+
+// ----------------------------    Listeners    --------------------------------------------
+inputAmount.addEventListener("keyup", () => {
+    if(inputAmount.value == "" || parseInt(inputAmount.value) < 0)
+        inputAmount.value = "1";
+})

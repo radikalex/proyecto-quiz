@@ -76,9 +76,15 @@ main {
 
 }
 
+.btn-comenzar:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
 
 .question {
     width: 100%;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -102,7 +108,8 @@ p {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    min-height: 33vw;
+    min-height: 33.5vw;
+    padding: 30px;
     width: 100%;
 }
 
@@ -176,9 +183,6 @@ p {
 .siguiente-pregunta {
     width: 300px;
     font-size: 20px;
-    
-    
-    
 }
 
 .respuesta-incorrecta {
