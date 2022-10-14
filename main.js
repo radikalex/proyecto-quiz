@@ -2,8 +2,12 @@ const divHome = document.getElementById('home')
 const divPregunta = document.getElementById('pregunta')
 const divQuestion = document.getElementById('question')
 const divResult = document.getElementById('result')
+<<<<<<< HEAD
 const divPrincipal = document.getElementById('contenedor-principal');
 const divLoading = document.getElementById('loading')
+=======
+const mainDiV = document.getElementById('main');
+>>>>>>> 7f5f1ee2931794a5bd408173a5cb8d6936e9798c
 
 let nota = 0;
 let numPreguntas = 0;
@@ -24,10 +28,14 @@ function obtenerPreguntas() {
         .then((res) => {
             questions = res.data;
             numPreguntas = cantidad;
+<<<<<<< HEAD
             divLoading.classList.add('hide')
             divLoading.classList.remove('loading')
             divQuestion.classList.add('question');
             divQuestion.classList.remove('hide');
+=======
+            divQuestion.classList.replace('hide', 'question');
+>>>>>>> 7f5f1ee2931794a5bd408173a5cb8d6936e9798c
             ponerPregunta(questions.results[indexPregunta])
         })
         .catch((err) => console.error(err));
@@ -42,6 +50,7 @@ function ponerPregunta(pregunta) {
 
     // Numero de pregunta y puntuación
     const divHeader = document.getElementById('pregunta-header')
+    divHeader.className = 'mb-4'
     divHeader.innerHTML = `<span>Pregunta ${indexPregunta + 1}</span> <span>Puntuación: <span id='nota'>${nota}<span>/${numPreguntas} </span>`
 
     // Poner la pregunta
@@ -66,14 +75,14 @@ function ponerPregunta(pregunta) {
     // Boton para pasar a la siguiente pregunta
     if(questions.results.length > indexPregunta + 1) {
         const btn_siguientePregunta = document.createElement('button')
-        btn_siguientePregunta.className = "btn btn-primary siguiente-pregunta"
+        btn_siguientePregunta.className = "btn-comenzar siguiente-pregunta"
         btn_siguientePregunta.innerHTML = "Siguiente Pregunta"
         btn_siguientePregunta.disabled = true;
         btn_siguientePregunta.addEventListener('click', siguientePregunta)
         divPregunta.appendChild(btn_siguientePregunta)
     } else {
         const btn_siguientePregunta = document.createElement('button')
-        btn_siguientePregunta.className = "btn btn-primary siguiente-pregunta"
+        btn_siguientePregunta.className = "btn-comenzar siguiente-pregunta"
         btn_siguientePregunta.innerHTML = "Finalizar Test"
         btn_siguientePregunta.addEventListener('click', finalizarTest)
         divPregunta.appendChild(btn_siguientePregunta)
@@ -97,14 +106,17 @@ function crearRespuestas(respuestas, hexaColors) {
 
 function siguientePregunta(e) {
     indexPregunta++;
+    mainDiV.className = "hqr-contenedor"
     ponerPregunta(questions.results[indexPregunta])
 }
 
 function preguntaRespondida() {
     document.querySelector('.siguiente-pregunta').disabled = false;
     if(preguntaCorrecta(this.innerText)) {
+        mainDiV.classList.add('container-correct')
         nota++;
     } else {
+        mainDiV.classList.add('container-incorrect')
         // if(nota !== 0)
         //     nota--;
     }
@@ -127,7 +139,7 @@ function preguntaCorrecta(respuesta) {
 }
 
 function decodeHtml(html) {
-    var txt = document.createElement("textarea");
+    let txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
 }
@@ -153,10 +165,9 @@ function desordenarRespuestas(respuestas) {
 }
 
 function finalizarTest() {
-    divQuestion.classList.remove('question');
-    divQuestion.classList.add('hide');
-    divResult.classList.remove('hide');
-    divResult.classList.add('result');
+    mainDiV.className = "hqr-contenedor"
+    divResult.classList.replace('hide', 'result');
+    divQuestion.classList.replace('question', 'hide');
     mostrarResultado();
 }
 
@@ -191,9 +202,15 @@ function mostrarResultado() {
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita ab sit repellendus fugit totam iusto ad soluta, quaerat in maxime nam repudiandae earum itaque velit cupiditate minima aut quas quam?</p>
     <img src="${gif_Url}" alt="asdf" class="${clase_gif}">
     <div class="botones-result">
+<<<<<<< HEAD
         <button class="btn btn-primary" onclick="reiniciarTest()">Reiniciar test</button>
         <button class="btn btn-primary" onclick="irPaginaPrincipal()">Ir a la página principal</button>
     </div>
+=======
+        <button class="btn-comenzar" onclick="reiniciarTest()">Reiniciar test</button>
+        <button class="btn-comenzar" onclick="irPaginaPrincipal()">Ir a la página principal</button>
+    </div> 
+>>>>>>> 7f5f1ee2931794a5bd408173a5cb8d6936e9798c
     `
 }
 
@@ -202,23 +219,18 @@ function obtenerPorcentajeNota() {
 }
 
 function reiniciarTest() {
-    divQuestion.classList.add('question');
-    divQuestion.classList.remove('hide');
-    divResult.classList.add('hide');
-    divResult.classList.remove('result');
+    divResult.classList.replace('result', 'hide');
     nota = 0;
     indexPregunta = 0;
-    ponerPregunta(questions.results[indexPregunta]);
+    obtenerPreguntas();
 }
 
 function irPaginaPrincipal() {
-    divResult.classList.add('hide');
-    divResult.classList.remove('result');
-    divHome.classList.remove('hide');
-    divHome.classList.add('home');
+    divResult.classList.replace('result', 'hide')
+    divHome.classList.replace('hide', 'home')
 }
 
-/* --------------------------------------------- Lógica de página principal ---------------------------------- */
+/* --------------------------------------- Lógica de página principal ---------------------------------- */
 
 {/* <div class="spinner-border text-primary" role="status">
   <span class="sr-only">Loading...</span>
@@ -229,8 +241,10 @@ function comenzarTest() {
     divLoading.classList.add('loading')
     indexPregunta = 0;
     nota = 0;
-    divHome.classList.add('hide');
-    divHome.classList.remove('home');
+    divHome.classList.replace('home', 'hide')
     obtenerPreguntas();
     
 }
+
+
+// ----------------------------    Listeners    --------------------------------------------
