@@ -2,7 +2,7 @@ const divHome = document.getElementById('home')
 const divPregunta = document.getElementById('pregunta')
 const divQuestion = document.getElementById('question')
 const divResult = document.getElementById('result')
-const inputAmount = document.getElementById('cantidad')
+const mainDiV = document.getElementById('main');
 
 let nota = 0;
 let numPreguntas = 0;
@@ -23,8 +23,7 @@ function obtenerPreguntas() {
         .then((res) => {
             questions = res.data;
             numPreguntas = cantidad;
-            divQuestion.classList.add('question');
-            divQuestion.classList.remove('hide');
+            divQuestion.classList.replace('hide', 'question');
             ponerPregunta(questions.results[indexPregunta])
         })
         .catch((err) => console.error(err));
@@ -39,6 +38,7 @@ function ponerPregunta(pregunta) {
 
     // Numero de pregunta y puntuación
     const divHeader = document.getElementById('pregunta-header')
+    divHeader.className = 'mb-4'
     divHeader.innerHTML = `<span>Pregunta ${indexPregunta + 1}</span> <span>Puntuación: <span id='nota'>${nota}<span>/${numPreguntas} </span>`
 
     // Poner la pregunta
@@ -94,14 +94,17 @@ function crearRespuestas(respuestas, hexaColors) {
 
 function siguientePregunta(e) {
     indexPregunta++;
+    mainDiV.className = "hqr-contenedor"
     ponerPregunta(questions.results[indexPregunta])
 }
 
 function preguntaRespondida() {
     document.querySelector('.siguiente-pregunta').disabled = false;
     if(preguntaCorrecta(this.innerText)) {
+        mainDiV.classList.add('container-correct')
         nota++;
     } else {
+        mainDiV.classList.add('container-incorrect')
         // if(nota !== 0)
         //     nota--;
     }
@@ -123,7 +126,7 @@ function preguntaCorrecta(respuesta) {
 }
 
 function decodeHtml(html) {
-    var txt = document.createElement("textarea");
+    let txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
 }
@@ -149,10 +152,9 @@ function desordenarRespuestas(respuestas) {
 }
 
 function finalizarTest() {
-    divQuestion.classList.remove('question');
-    divQuestion.classList.add('hide');
-    divResult.classList.remove('hide');
-    divResult.classList.add('result');
+    mainDiV.className = "hqr-contenedor"
+    divResult.classList.replace('hide', 'result');
+    divQuestion.classList.replace('question', 'hide');
     mostrarResultado();
 }
 
@@ -198,35 +200,25 @@ function obtenerPorcentajeNota() {
 }
 
 function reiniciarTest() {
-    divQuestion.classList.add('question');
-    divQuestion.classList.remove('hide');
-    divResult.classList.add('hide');
-    divResult.classList.remove('result');
+    divResult.classList.replace('result', 'hide');
     nota = 0;
     indexPregunta = 0;
-    ponerPregunta(questions.results[indexPregunta]);
+    obtenerPreguntas();
 }
 
 function irPaginaPrincipal() {
-    divResult.classList.add('hide');
-    divResult.classList.remove('result');
-    divHome.classList.remove('hide');
-    divHome.classList.add('home');
+    divResult.classList.replace('result', 'hide')
+    divHome.classList.replace('hide', 'home')
 }
 
-/* --------------------------------------------- Lógica de página principal ---------------------------------- */
+/* --------------------------------------- Lógica de página principal ---------------------------------- */
 
 function comenzarTest() {
     indexPregunta = 0;
     nota = 0;
-    divHome.classList.add('hide');
-    divHome.classList.remove('home');
+    divHome.classList.replace('home', 'hide')
     obtenerPreguntas();
 }
 
 
 // ----------------------------    Listeners    --------------------------------------------
-inputAmount.addEventListener("keyup", () => {
-    if(inputAmount.value == "" || parseInt(inputAmount.value) < 0)
-        inputAmount.value = "1";
-})

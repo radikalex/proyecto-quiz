@@ -15,12 +15,18 @@
     </header>
 
     <main>
-        <div class="hqr-contenedor">
+        <div id="main" class="hqr-contenedor">
             <div id="home" class="home">
                 <h1 class="title">Quiz</h1>
                 <form class="form-quiz">
                     <label for="cantidad"> Number of Questions: </label><br>
-                    <input type="number" id="cantidad" name="cantidad" class="form-control" value="10" min="1" max="50">
+                    <select id="cantidad" name="cantidad" class="form-select">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select>
                     <br>
                     <label for="categoria">Select Category: </label><br>
                     <select name="categoria" id="categoria" class="form-select">

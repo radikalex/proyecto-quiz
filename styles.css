@@ -131,6 +131,14 @@ p {
     justify-content: stretch;
 }
 
+.container-correct {
+    box-shadow: rgb(13 218 10 / 35%) 0px 0px 30px 25px;
+}
+
+.container-incorrect {
+    box-shadow: rgba(224, 12, 19, 0.35) 0px 0px 30px 25px;
+}
+
 #pregunta {
     display: flex;
     flex-direction: column;
@@ -162,7 +170,7 @@ p {
     justify-content: space-around;
     align-items: center;
     border-radius: 30px;
-    min-height: 33vw;
+    min-height: 34vw;
     width: 100%;
 }
 
