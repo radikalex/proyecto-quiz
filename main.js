@@ -62,14 +62,14 @@ function ponerPregunta(pregunta) {
     // Boton para pasar a la siguiente pregunta
     if(questions.results.length > indexPregunta + 1) {
         const btn_siguientePregunta = document.createElement('button')
-        btn_siguientePregunta.className = "btn btn-primary siguiente-pregunta"
+        btn_siguientePregunta.className = "btn-comenzar siguiente-pregunta"
         btn_siguientePregunta.innerHTML = "Siguiente Pregunta"
         btn_siguientePregunta.disabled = true;
         btn_siguientePregunta.addEventListener('click', siguientePregunta)
         divPregunta.appendChild(btn_siguientePregunta)
     } else {
         const btn_siguientePregunta = document.createElement('button')
-        btn_siguientePregunta.className = "btn btn-primary siguiente-pregunta"
+        btn_siguientePregunta.className = "btn-comenzar siguiente-pregunta"
         btn_siguientePregunta.innerHTML = "Finalizar Test"
         btn_siguientePregunta.addEventListener('click', finalizarTest)
         divPregunta.appendChild(btn_siguientePregunta)
@@ -186,8 +186,8 @@ function mostrarResultado() {
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita ab sit repellendus fugit totam iusto ad soluta, quaerat in maxime nam repudiandae earum itaque velit cupiditate minima aut quas quam?</p>
     <img src="${gif_Url}" alt="asdf" class="${clase_gif}">
     <div class="botones-result">
-        <button class="btn btn-primary" onclick="reiniciarTest()">Reiniciar test</button>
-        <button class="btn btn-primary" onclick="irPaginaPrincipal()">Ir a la página principal</button>
+        <button class="btn-comenzar" onclick="reiniciarTest()">Reiniciar test</button>
+        <button class="btn-comenzar" onclick="irPaginaPrincipal()">Ir a la página principal</button>
     </div> 
     `
 }

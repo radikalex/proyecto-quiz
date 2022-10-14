@@ -1,3 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Ribeye&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Life+Savers:wght@700&display=swap');
+
+
+
 :root {
     --altura-header: 0px;
     --altura-footer: 0px;
@@ -9,8 +14,8 @@ html, body {
 }
 
 body {
-    background-color: #fa1111;
-    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    background-image: linear-gradient(to top, #5ee7df 0%, #b490ca 100%);
+    background-attachment: fixed;   
 }
 
 .hide {
@@ -36,8 +41,40 @@ main {
 }
 
 .form-quiz {
-    width: 80%;
+
+    font-family: 'Life Savers', cursive;
+    font-size: 25px;
+    text-align: center;
+    width: 30%;
 }
+
+.btn-comenzar{
+
+    box-shadow: rgba(46, 237, 240, 0.4) 0px 5px, rgba(46, 240, 224, 0.66) 0px 10px, rgba(84, 241, 244, 0.2) 0px 15px, rgba(70, 231, 240, 0.1) 0px 20px, rgba(35, 109, 236, 0.05) 0px 25px;
+     font-family: 'Ribeye', cursive;
+     font-size: 30px;
+     background-color: rgba(53, 12, 143, 0.878);
+     position: relative;
+     display: inline-block;
+     padding: 15px 15px;
+     color:rgb(255, 255, 255);
+     letter-spacing:  1px;
+     text-decoration: none;
+     overflow: hidden;
+     transition: 0.2s;
+     border-radius: 20px;
+     cursor: pointer;
+
+}
+
+.btn-comenzar:hover{
+    color: black;
+    background: #71e2f1f0;
+    box-shadow: 0 0 10px #1eacdbb2, 0 0 40px #55dddd, 0 0 80px #f1ee25ac;
+    transition-delay: 0s;
+
+}
+
 
 .question {
     width: 100%;
@@ -76,6 +113,7 @@ p {
 
 .hqr-contenedor {
     background-color:white;
+    box-shadow: rgba(245, 240, 240, 0.471) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
     border-radius: 30px;
     width: 70%;
     min-height: 35vw;
@@ -108,6 +146,7 @@ p {
 }
 
 .home {
+    background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -117,10 +156,14 @@ p {
 }
 
 .contenedor-respuestas-multiples {
+    font-family: 'Life Savers', cursive;
+    font-size: 20px;
     width: 100%;
+
 }
 
 #pregunta-header {
+    font-family: 'Ribeye', cursive;
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -132,6 +175,8 @@ p {
     width: 300px;
     font-size: 20px;
     height: 50px;
+    
+    
 }
 
 .respuesta-incorrecta {
