@@ -58,12 +58,14 @@ footer {
 }
 
 .links-container {
+    font-family: 'Ribeye', cursive;
     flex: 3;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 15%;
     padding-right: 10%;
+
 }
 
 main {
