@@ -82,32 +82,98 @@ main {
 }
 
 .btn-comenzar{
-
-     box-shadow: rgba(0, 0, 0, 0.492) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px; 
-     font-family: 'Ribeye', cursive;
-     font-size: 20px;
-     background-color: rgba(53, 12, 143, 0.878);
-     position: relative;
-     display: inline-block;
-     color:rgb(255, 255, 255);
-     letter-spacing:  1px;
-     text-decoration: none;
-     overflow: hidden;
-     transition: 0.2s;
-     border-radius: 20px;
-     cursor: pointer;
-     height: 50px;
      
-
-}
-
-.btn-comenzar:hover{
-    color: black;
-    background: #71e2f1f0;
-    box-shadow: 0 0 10px #1eacdbb2, 0 0 40px #55dddd, 0 0 80px #f1ee25ac;
-    transition-delay: 0s;
-
-}
+    font-family: 'Ribeye', cursive;
+    box-shadow: rgba(0, 0, 0, 0.492) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.05rem;
+    border: 1px solid #0E1822;
+    padding: 0.8rem 2.1rem;
+    background-image: linear-gradient(to right, #eea2a2 0%, #bbc1bf 19%, #57c6e1 42%, #b49fda 79%, #7ac5d8 100%); 
+    background-color: #f8b6d386;
+    background-size: 200%;
+    background-position: 200%;
+    background-repeat: no-repeat;
+    transition: 0.3s ease-in-out;
+    transition-property: background-position, border, color;
+    position: relative;
+    z-index: 1;
+   }
+   
+   .btn-comenzar:hover {
+    border: 1px solid #bfbcd1;
+    color: white;
+    background-position: 40%;
+   }
+   
+   .btn-comenzar:before {
+    content: "";
+    position: absolute;
+    background-color: #0E1822;
+    width: 0.2rem;
+    height: 0.2rem;
+    top: -1px;
+    left: -1px;
+    transition: background-color 0.15s ease-in-out;
+   }
+   
+   .btn-comenzar:hover:before {
+    background-color: white;
+   }
+   
+   .btn-comenzar:hover:after {
+    background-color: white;
+   }
+   
+   .btn-comenzar:after {
+    content: "";
+    position: absolute;
+    background-color: #000000;
+    width: 0.3rem;
+    height: 0.3rem;
+    bottom: -1px;
+    right: -1px;
+    transition: background-color 0.15s ease-in-out;
+   }
+   
+   .btn-comenzar-borders {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+   }
+   
+   .btn-comenzar-borders:before {
+    content: "";
+    position: absolute;
+    width: calc(100% + 0.5em);
+    height: 50%;
+    left: -0.3em;
+    top: -0.3em;
+    border: 1px solid #0E1822;
+    border-bottom: 0px;
+       /* opacity: 0.3; */
+   }
+   
+   .btn-comenzar-borders:after {
+    content: "";
+    position: absolute;
+    width: calc(100% + 0.5em);
+    height: 50%;
+    left: -0.3em;
+    bottom: -0.3em;
+    border: 1px solid #0E1822;
+    border-top: 0px;
+       /* opacity: 0.3; */
+    z-index: 0;
+   }
+   
+   .shape {
+    fill: #0E1822;
+   }
+   
 
 .btn-comenzar:disabled {
     opacity: 0.35;

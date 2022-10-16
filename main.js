@@ -344,7 +344,7 @@ function comenzarTest(e) {
 function createHomePage() {
     divHome.innerHTML = 
     `
-        <h1 class="title">Quiz</h1>
+       
         <form class="form-quiz" onsubmit="comenzarTest(event)">
             <label for="name">Your name:</label>
             <input type="text" id="name" name="name" class="form-control"> <br>
