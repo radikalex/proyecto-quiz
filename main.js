@@ -791,8 +791,8 @@ const labelsColors = [
     "rgb(147, 156, 138)"
 ]
 
-let actualGraphic = 0;
-const numberGraphics = 1;
+let actualGraphic = 1;
+const numberGraphics = 2;
 
 function nextGraphic() {
     actualGraphic = (actualGraphic + 1) % numberGraphics;
@@ -841,7 +841,7 @@ function createStats() {
     const divTitleGraphicsData = document.createElement('div');
     divTitleGraphicsData.className = "graphic-title";
     const h1 = document.createElement('h1');
-    h1.innerHTML = `Number of questions done for each category`;
+    h1.id = 'title-graphic';
     divTitleGraphicsData.appendChild(h1);
     divGraphicsData.appendChild(divTitleGraphicsData);
     const userStatsGraphicsDiv = document.createElement('div');
@@ -859,6 +859,7 @@ function createStats() {
 
 function createGraphicsForUser() {
     const parentDiv = document.getElementById('graphics-container');
+    const h1 = document.getElementById('title-graphic')
 
     while(parentDiv.firstChild) {
         parentDiv.removeChild(parentDiv.firstChild);
@@ -870,7 +871,32 @@ function createGraphicsForUser() {
     left_arrow.className = 'arrow'
     parentDiv.appendChild(left_arrow);
 
-    const info = getUserDataEachCategory();
+    switch(actualGraphic) {
+        case 0:
+            h1.innerHTML = `Number of questions done for each category`;
+            createPieGraphicData(parentDiv);
+            break;
+        case 1:
+            h1.innerHTML = `Percentage of correct answers for each category`;
+            createBarGraphicData(parentDiv);
+            break;
+        default:
+            console.error('Error. Graph index not contemplated.');
+    }
+
+    const right_arrow = document.createElement('img');
+    right_arrow.src = 'assets/right-arrow.png'
+    right_arrow.onclick = nextGraphic;
+    right_arrow.className = 'arrow';
+    parentDiv.appendChild(right_arrow);
+}
+
+function changeUser() {
+    createGraphicsForUser();
+}
+
+function createPieGraphicData(parentDiv) {
+    const info = getUserDataNumberEachCategory();
     const divLegend = document.createElement('div'); 
     divLegend.className = "chart-legend";
     divLegend.id = "chart-legend";
@@ -889,23 +915,9 @@ function createGraphicsForUser() {
     divChart.className = 'mychart-container'
     const canvas = document.createElement('canvas');
     canvas.id = 'myChart';
-    showGraphics(canvas, info);
+    pieGraphic(canvas, info);
     divChart.appendChild(canvas);
     parentDiv.appendChild(divChart);
-
-    const right_arrow = document.createElement('img');
-    right_arrow.src = 'assets/right-arrow.png'
-    right_arrow.onclick = nextGraphic;
-    right_arrow.className = 'arrow';
-    parentDiv.appendChild(right_arrow);
-}
-
-function changeUser() {
-    createGraphicsForUser();
-}
-
-function showGraphics(canvas, info) {
-    pieGraphic(canvas, info);
 }
 
 function pieGraphic(canvas, info) {
@@ -916,9 +928,8 @@ function pieGraphic(canvas, info) {
     labels: labels,
     datasets: [
         {
-        label: "Mi primera gráfica",
-        backgroundColor: labelsColors,
-        data: dataValues,
+            backgroundColor: labelsColors,
+            data: dataValues,
         },
     ],
     };
@@ -929,14 +940,7 @@ function pieGraphic(canvas, info) {
         maintainAspectRatio: true,
         plugins: {
             legend: {
-                position: 'left',
                 display: false,
-                labels: {
-                    // This more specific font property overrides the global property
-                    font: {
-                        size: 14
-                    }
-                }
             } 
         }
     },
@@ -945,7 +949,78 @@ function pieGraphic(canvas, info) {
     const myChart = new Chart(ctx, config);
 }
 
-function getUserDataEachCategory() {
+function createBarGraphicData(parentDiv) {
+    const info = getUserDataPercentageCategory();
+
+    const divBarContainer = document.createElement('div'); 
+    divBarContainer.className = "bar-container"
+    const divLegend = document.createElement('div'); 
+    divLegend.className = "chart-legend-horizontal";
+    divLegend.id = "chart-legend-horizontal";
+    for (const key in labelsColors) {
+        divLegend.innerHTML += 
+        `
+            <div class="color-label">
+                <div class="color" style="background-color: ${labelsColors[key]}"></div>
+                <div class="label">${info[0][key]}</div>
+            </div>
+        `
+    }
+    divBarContainer.appendChild(divLegend);
+
+    const divChart = document.createElement('div');
+    divChart.className = 'mychart-container-bar'
+    const canvas = document.createElement('canvas');
+    canvas.id = 'myChart';
+    barGraphic(canvas, info);
+    divChart.appendChild(canvas);
+    divBarContainer.appendChild(divChart);
+    
+    parentDiv.appendChild(divBarContainer);
+}
+
+function barGraphic(canvas, info) {
+    const ctx = canvas.getContext('2d');
+    const labels = info[0];
+    const dataValues = info[1];
+    const data = {
+        labels: labels,
+        datasets: [{
+            data: dataValues,
+            backgroundColor: labelsColors,
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+                x: {
+                    ticks: {
+                        display: false
+                    }
+                }
+            },
+            labels: {
+                display: false
+            },
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                } 
+            }
+        },
+    };
+    
+    const myChart = new Chart(ctx, config);
+}
+
+function getUserDataNumberEachCategory() {
     const quizUsersData = JSON.parse(localStorage.getItem("quiz_data")).users || [];
     const userName = document.getElementById('users-select').value;
     const result = [[], []]
@@ -965,6 +1040,40 @@ function getUserDataEachCategory() {
         for (const category of quizUsersData[indexUser].categoriesData) {
             result[0].push(category.name);
             result[1].push(category.correct_answers + category.incorrect_answers)
+        }
+    }
+
+    return result;
+}
+
+function getUserDataPercentageCategory() {
+    const quizUsersData = JSON.parse(localStorage.getItem("quiz_data")).users || [];
+    const userName = document.getElementById('users-select').value;
+    const result = [[], []]
+
+    if(userName === 'all') {
+        for (const category of quizUsersData[0].categoriesData) {
+            result[0].push(category.name);
+            result[1].push([category.correct_answers, category.incorrect_answers])
+        }
+        for (let i = 1; i < quizUsersData.length; i++) {
+            for (let j = 0; j < result[1].length; j++) {
+                result[1][j][0] += quizUsersData[i].categoriesData[j].correct_answers;
+                result[1][j][1] += quizUsersData[i].categoriesData[j].incorrect_answers;
+            }
+        }
+        for (let j = 0; j < result[1].length; j++) {
+            result[1][j] = obtenerPorcentaje(result[1][j][0], result[1][j][0] + result[1][j][1]);
+        }
+    } else {
+        const indexUser = findUserByName(userName);
+        for (const category of quizUsersData[indexUser].categoriesData) {
+            result[0].push(category.name);
+            if(category.correct_answers || category.incorrect_answers) {
+                result[1].push(obtenerPorcentaje(category.correct_answers, category.correct_answers + category.incorrect_answers))
+            } else {
+                result[1].push(0);
+            }
         }
     }
 
