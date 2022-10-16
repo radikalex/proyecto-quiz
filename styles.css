@@ -2,13 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&display=swap');
 
 :root {
-    --altura-header: 0px;
+    --altura-header: 80px;
     --altura-footer: 45px;
 }
 
 html, body {
     height: 100%;
-    
 }
 
 body {
@@ -22,7 +21,6 @@ body {
 
 header {
     height: var(--altura-header);
-    /* background-color: chartreuse; */
 }
 
 footer {
@@ -30,12 +28,45 @@ footer {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    /* background-color: aqua; */
+}
+
+#navBar {
+    height: var(--altura-header);
+    display: flex;
+    align-items: stretch;
+}
+
+.navBar-link {
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.logo-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    color: white;
+    font-size: 40px;
+    padding-right: 5%;
+    font-weight: bold;
+}
+
+.links-container {
+    flex: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15%;
+    padding-right: 10%;
 }
 
 main {
     min-height: calc(100% - (var(--altura-header) + var(--altura-footer)));
-    /* background-color: darksalmon; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -144,7 +175,15 @@ p {
     width: 100%;
 }
 
-
+.classification {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 33.5vw;
+    padding: 30px;
+    width: 100%;
+}
 
 .hqr-contenedor {
     background-color:white;
@@ -231,8 +270,36 @@ p {
     color: grey; 
 }
 
-.logo {
+.icons {
     width: 32px;
     height: 32px;
     border-radius: 30px;
-  }
+}
+
+.classTable {
+    width: 80%;
+    text-align: center;
+}
+
+th, td {
+    text-align: center;
+    border: 1px solid black;
+}
+
+.tables-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.arrow {
+    width: 5%;
+    height: 5%;
+    opacity: 0.3;
+}
+
+.arrow:hover {
+    opacity: 1;
+    cursor: pointer;
+}
