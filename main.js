@@ -385,7 +385,6 @@ function createHomePage() {
                 <option value="31">Entertainment: Japanese Anime & Manga</option>
                 <option value="32">Entertainment: Cartoon & Animations</option>
             </select>
-
             <br><label for="dificultad">Select Difficulty: </label>
             <select name="dificultad" id="dificultad" class="form-select">
                 <option value="">Any type</option>

@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ribeye&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arima:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fascinate+Inline&display=swap');
 
 :root {
     --altura-header: 80px;
@@ -52,10 +54,10 @@ footer {
 
 .logo {
     color: white;
-    font-size: 40px;
+    font-size: 50px;
     padding-right: 5%;
     font-weight: bold;
-    font-family: 'Ribeye', cursive;
+    font-family: 'Fascinate Inline', cursive;
 }
 
 .links-container {
@@ -277,8 +279,17 @@ main {
 }
 
 .spinner-border {
-    width: 2vw;
-    height: 2vw;
+    width: 11.2px;
+   height: 11.2px;
+   border-radius: 11.2px;
+   box-shadow: 28px 0px 0 0 rgba(193,71,255,0.2), 22.7px 16.5px 0 0 rgba(193,71,255,0.4), 8.68px 26.6px 0 0 rgba(193,71,255,0.6), -8.68px 26.6px 0 0 rgba(193,71,255,0.8), -22.7px 16.5px 0 0 #c147ff;
+   animation: spinner-b87k6z 1s infinite linear;
+}
+
+@keyframes spinner-b87k6z {
+   to {
+      transform: rotate(360deg);
+   }
 }
 
 .container-loading {
@@ -286,11 +297,13 @@ main {
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    
 }
 
 .text-loading {
-    color: #1b67d9;
-    font-size: 20px;
+    color: #771bd9;
+    font-size: 50px;
+    font-family: 'Arima', cursive;
 }
 
 .question {
@@ -334,6 +347,8 @@ p {
     padding: 30px;
     width: 100%;
 }
+
+
 
 .hqr-contenedor {
     background-color: white;
@@ -426,14 +441,20 @@ p {
 }
 
 .classTable {
-    width: 80%;
+    width: 90%;
     text-align: center;
+    background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
+    font-family: 'Arima', cursive;
+    border-style: double;
+
 }
 
 th,
 td {
     text-align: center;
-    border: 1px solid black;
+    border: 1px inset rgb(30, 144, 193);
+    
 }
 
 .tables-container {
@@ -454,3 +475,4 @@ td {
     opacity: 1;
     cursor: pointer;
 }
+
