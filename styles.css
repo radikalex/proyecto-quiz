@@ -54,6 +54,7 @@ footer {
     font-size: 40px;
     padding-right: 5%;
     font-weight: bold;
+    font-family: 'Ribeye', cursive;
 }
 
 .links-container {
@@ -127,6 +128,50 @@ main {
     min-height: 33vw;
 }
 
+.stats {
+    display: flex;
+    flex-direction: column;
+    min-height: 33.5vw;
+    padding: 30px;
+    width: 100%;
+    gap: 10px;
+}
+
+.select-container {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#select-user-form {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 15px;
+    width: 100%;
+}
+
+#select-user-form .form-select {
+    max-width: 40%;
+}
+
+.graphics-container {
+    flex: 25;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mychart-container {
+    width: 35%;
+}
+
+.back {
+    align-self: center;
+    width: 30%;
+}
+
 .spinner-border {
     width: 2vw;
     height: 2vw;
@@ -152,6 +197,7 @@ main {
     justify-content: space-around;
     min-height: 33vw;
 }
+
 
 .gif-resultado {
     width: 30vw;
@@ -227,7 +273,6 @@ p {
     color: whitesmoke;
     border: 0;
     font-weight: bold;
-    
 }
 
 .home {

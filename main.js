@@ -6,6 +6,7 @@ const divPrincipal = document.getElementById('contenedor-principal');
 const divLoading = document.getElementById('loading')
 const mainDiV = document.getElementById('main');
 const classDiv = document.getElementById('classification');
+const statsDiv = document.getElementById('stats');
 
 let nota = 0;
 let numPreguntas = 0;
@@ -17,8 +18,36 @@ let quiz_data = JSON.parse(localStorage.getItem("quiz_data")) || {
     users: []
 };
 
-// Preguntas para hacer pruebas antes de usar la API
 let questions = {}
+
+const categories = {
+    "General Knowledge" : 9,
+    "Entertainment: Books" : 10,
+    "Entertainment: Film" : 11,
+    "Entertainment: Music" : 12,
+    "Entertainment: Musicals & Theatres" : 13,
+    "Entertainment: Television" : 14,
+    "Entertainment: Video Games" : 15,
+    "Entertainment: Board Games" : 16,
+    "Science & Nature" : 17,
+    "Science: Computers" : 18,
+    "Science: Mathematics" : 19,
+    "Mythology" : 20,
+    "Sports" : 21,
+    "Geography" : 22,
+    "History" : 23,
+    "Politics" : 24,
+    "Art" : 25,
+    "Celebrities" : 26,
+    "Animals" : 27,
+    "Vehicles" : 28,
+    "Entertainment: Comics" : 29,
+    "Science: Gadgets" : 30,
+    "Entertainment: Japanese Anime & Manga" : 31,
+    "Entertainment: Cartoon & Animations" : 32
+}
+
+let categoriesData = []
 
 /* -------------------------------- Lógica del quiz ---------------------------------- */
 
@@ -26,17 +55,30 @@ function obtenerPreguntas() {
     const cantidad = document.getElementById('cantidad').value;
     const categoria = document.getElementById('categoria').value;
     const dificultad = document.getElementById('dificultad').value;
+    initCategoriesData();
 
     axios
         .get(`https://opentdb.com/api.php?amount=${cantidad}&category=${categoria}&difficulty=${dificultad}`)
-        .then((res) => {
-            questions = res.data;
-            numPreguntas = cantidad;
-            divLoading.classList.replace('loading', 'hide');
-            divQuestion.classList.replace('hide', 'question');
-            ponerPregunta(questions.results[indexPregunta])
+        .then((res) => {   
+                questions = res.data;
+                numPreguntas = cantidad;
+                divLoading.classList.replace('loading', 'hide');
+                divQuestion.classList.replace('hide', 'question');
+                ponerPregunta(questions.results[indexPregunta])
         })
         .catch((err) => console.error(err));
+}
+
+function initCategoriesData() {
+    categoriesData = [];
+
+    for (const key in categories) {
+        categoriesData.push({
+            name: key,
+            correct_answers: 0,
+            incorrect_answers: 0
+        })
+    }
 }
 
 function ponerPregunta(pregunta) {
@@ -112,11 +154,13 @@ function preguntaRespondida() {
     document.querySelector('.siguiente-pregunta').disabled = false;
     if(preguntaCorrecta(this.innerText)) {
         mainDiV.classList.add('container-correct')
+        const idxCategory = categories[questions.results[indexPregunta].category] - 9;
+        categoriesData[idxCategory].correct_answers++;
         nota++;
     } else {
         mainDiV.classList.add('container-incorrect')
-        // if(nota !== 0)
-        //     nota--;
+        const idxCategory = categories[questions.results[indexPregunta].category] - 9;
+        categoriesData[idxCategory].incorrect_answers++;
     }
     deshabilitarRespuestas();
     document.getElementById('nota').innerText = `${nota}/${numPreguntas}`
@@ -129,7 +173,6 @@ function deshabilitarRespuestas() {
         if(!preguntaCorrecta(respuesta.innerText))
             respuesta.classList.add('respuesta-incorrecta')
     }
-
 }
 
 function preguntaCorrecta(respuesta) {
@@ -171,7 +214,7 @@ function finalizarTest() {
 }
 
 function saveDataToLocalStorage() {
-    const userPos = findUserByName();
+    const userPos = findUserByName(userName);
 
     if( userPos > -1 ) {
         // Old user
@@ -179,7 +222,8 @@ function saveDataToLocalStorage() {
             numQuestions: numPreguntas,
             correct_answers: nota,
             incorrect_answers: numPreguntas - nota
-        })
+        });
+        quiz_data.users[userPos].categoriesData = sumCategoryData(quiz_data.users[userPos].categoriesData, categoriesData);
     }
     else {
         // New Usuario
@@ -189,13 +233,14 @@ function saveDataToLocalStorage() {
                 numQuestions: numPreguntas,
                 correct_answers: nota,
                 incorrect_answers: numPreguntas - nota
-            }] 
+            }],
+            categoriesData: categoriesData 
         })
     }
     localStorage.setItem('quiz_data', JSON.stringify(quiz_data));
 }
 
-function findUserByName() {
+function findUserByName(userName) {
     for (let i = 0; i < quiz_data.users.length; i++) {
         if(userName === quiz_data.users[i].name) {
             return i;
@@ -203,6 +248,20 @@ function findUserByName() {
     }
 
     return -1;
+}
+
+function sumCategoryData(currentData, newData) {
+    const result = []
+
+    for (let i = 0; i < currentData.length; i++) {
+        result.push({
+            name: currentData[i].name,
+            correct_answers: currentData[i].correct_answers + newData[i].correct_answers,
+            incorrect_answers: currentData[i].incorrect_answers + newData[i].incorrect_answers
+        })
+    }
+
+    return result;
 }
 
 /* --------------------------------------------- Lógica del resultado ---------------------------------- */
@@ -260,15 +319,18 @@ function irPaginaPrincipal() {
 }
 
 function hideAllViews() {
+    mainDiV.className = "hqr-contenedor"
     classDiv.classList.replace('classification', 'hide')
     divResult.classList.replace('result', 'hide')
     divHome.classList.replace('home', 'hide')
     divQuestion.classList.replace('question', 'hide');
+    statsDiv.classList.replace('stats', 'hide');
 }
 
 /* --------------------------------------- Lógica de página principal ---------------------------------- */
 
-function comenzarTest() {
+function comenzarTest(e) {
+    e.preventDefault();
     divLoading.classList.replace('hide', 'loading');
     userName = document.getElementById('name').value.trim();
     if(userName === "")
@@ -283,7 +345,7 @@ function createHomePage() {
     divHome.innerHTML = 
     `
         <h1 class="title">Quiz</h1>
-        <form class="form-quiz">
+        <form class="form-quiz" onsubmit="comenzarTest(event)">
             <label for="name">Your name:</label>
             <input type="text" id="name" name="name" class="form-control"> <br>
             <label for="cantidad"> Number of Questions: </label><br>
@@ -300,9 +362,9 @@ function createHomePage() {
                 <option value="">Any type</option>
                 <option value="9">General Knowledge</option>
                 <option value="10">Entertainment: Books</option>
-                <option value="11">Entertainment: Films</option>
+                <option value="11">Entertainment: Film</option>
                 <option value="12">Entertainment: Music</option>
-                <option value="13">Entertainment: Musical & Theatres</option>
+                <option value="13">Entertainment: Musicals & Theatres</option>
                 <option value="14">Entertainment: Television</option>
                 <option value="15">Entertainment: Video Games</option>
                 <option value="16">Entertainment: Board Games</option>
@@ -321,7 +383,7 @@ function createHomePage() {
                 <option value="29">Entertainment: Comics</option>
                 <option value="30">Science: Gadgets</option>
                 <option value="31">Entertainment: Japanese Anime & Manga</option>
-                <option value="32">Entertainment: Cartoons & Animations</option>
+                <option value="32">Entertainment: Cartoon & Animations</option>
             </select>
 
             <br><label for="dificultad">Select Difficulty: </label>
@@ -332,10 +394,7 @@ function createHomePage() {
                 <option value="hard">Hard</option>
             </select>
         </form>
-        <div>
-            <button class="btn-comenzar" onclick="comenzarTest()">Start</button>
-            <button class="btn-comenzar" onclick="goClassification()">See clasification</button>
-        </div>
+        <button class="btn-comenzar" onclick="comenzarTest(event)">Start</button>
     `
 
 }
@@ -704,7 +763,189 @@ function getDataUsers() {
     return usersData;
 }
 
-// ----------------------------    Listeners    --------------------------------------------
+// ----------------------------    Stats Logic   --------------------------------------------
+function goStats() {
+    hideAllViews();
+    statsDiv.classList.replace('hide', 'stats');
+    createStats();
+}
 
-// asd
+function createStats() {
+
+    while(statsDiv.firstChild) {
+        statsDiv.removeChild(statsDiv.firstChild);
+    }
+
+    const userStatsSelectDiv = document.createElement('div');
+    userStatsSelectDiv.className = 'select-container';
+
+    const form = document.createElement('form');
+    form.id = "select-user-form";
+    const label = document.createElement('label')
+    label.for="users-select";
+    label.innerHTML='Select one user to see the stats:'
+    form.appendChild(label);
+    const select = document.createElement('select');
+    select.className="form-select";
+    select.name="users-select";
+    select.id="users-select";
+    select.onchange = changeUser;
+    fillUserSelect(select);
+    form.appendChild(select);
+    userStatsSelectDiv.appendChild(form);
+    statsDiv.appendChild(userStatsSelectDiv);
+
+    const userStatsGraphicsDiv = document.createElement('div');
+    userStatsGraphicsDiv.id = 'graphics-container';
+    userStatsGraphicsDiv.className = 'graphics-container';
+    statsDiv.appendChild(userStatsGraphicsDiv);
+    createGraphicsForUser(select.value);
+    
+    const button = document.createElement('button');
+    button.innerHTML = 'Go to main page';
+    button.className = 'btn-comenzar back';
+    button.onclick = irPaginaPrincipal;
+    statsDiv.appendChild(button);
+
+}
+
+function createGraphicsForUser(user) {
+    const parentDiv = document.getElementById('graphics-container');
+
+    while(parentDiv.firstChild) {
+        parentDiv.removeChild(parentDiv.firstChild);
+    }
+
+    const divLegend = document.createElement('div'); 
+    divLegend.className = "chart-legend";
+    divLegend.id = "chart-legend";
+    parentDiv.appendChild(divLegend);
+
+
+    const divChart = document.createElement('div');
+    divChart.className = 'mychart-container'
+    const canvas = document.createElement('canvas');
+    canvas.id = 'myChart';
+    showGraphics(canvas);
+    divChart.appendChild(canvas);
+    parentDiv.appendChild(divChart);
+}
+
+function changeUser() {
+    createGraphicsForUser(this.value);
+}
+
+function showGraphics(canvas) {
+    pieGraphic(canvas);
+}
+
+function pieGraphic(canvas) {
+    const ctx = canvas.getContext('2d');
+    const info = getUserDataEachCategory();
+    const labels = info[0];
+    const dataValues = info[1];
+    const data = {
+    labels: labels,
+    datasets: [
+        {
+        label: "Mi primera gráfica",
+        backgroundColor: [
+            "rgb(96, 162, 15)",
+            "rgb(197, 101, 103)",
+            "rgb(254, 39, 206)",
+            "rgb(143, 111, 233)",
+            "rgb(227, 59, 92)",
+            "rgb(82, 225, 110)",
+            "rgb(169, 238, 128)",
+            "rgb(199, 194, 124)",
+            "rgb(214, 195, 155)",
+            "rgb(226, 251, 169)",
+            "rgb(142, 55, 24)",
+            "rgb(240, 183, 96)",
+            "rgb(18, 74, 183)",
+            "rgb(239, 99, 63)",
+            "rgb(66, 2, 109",
+            "rgb(251, 62, 196)",
+            "rgb(60, 107, 235)",
+            "rgb(139, 19, 144)",
+            "rgb(87, 142, 83)",
+            "rgb(128, 61, 200)",
+            "rgb(94, 224, 239)",
+            "rgb(183, 180, 56)",
+            "rgb(148, 164, 232)",
+            "rgb(147, 156, 138)"
+        ],
+        data: dataValues,
+        },
+    ],
+    };
+    const config = {
+    type: "pie",
+    data: data,
+    options: {
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                position: 'left',
+                display: false,
+                labels: {
+                    // This more specific font property overrides the global property
+                    font: {
+                        size: 14
+                    }
+                }
+            }
+            
+        }
+    },
+    };
+
+    const myChart = new Chart(ctx, config);
+}
+
+function getUserDataEachCategory() {
+    const quizUsersData = JSON.parse(localStorage.getItem("quiz_data")).users || [];
+    const userName = document.getElementById('users-select').value;
+    const result = [[], []]
+
+    if(userName === 'all') {
+        for (const category of quizUsersData[0].categoriesData) {
+            result[0].push(category.name);
+            result[1].push(category.correct_answers + category.incorrect_answers)
+        }
+        for (let i = 1; i < quizUsersData.length; i++) {
+            for (let j = 0; j < result[1].length; j++) {
+                result[1][j] += quizUsersData[i].categoriesData[j].correct_answers + quizUsersData[i].categoriesData[j].incorrect_answers;
+            }
+        }
+    } else {
+        const indexUser = findUserByName(userName);
+        for (const category of quizUsersData[indexUser].categoriesData) {
+            result[0].push(category.name);
+            result[1].push(category.correct_answers + category.incorrect_answers)
+        }
+    }
+
+    return result;
+}
+
+function fillUserSelect (select) {
+    const quizUsersData = JSON.parse(localStorage.getItem("quiz_data")).users || [];
+    const option = document.createElement('option');
+    option.value = "all";
+    option.innerHTML = 'All users';
+    select.appendChild(option)
+
+    if(quizUsersData.length > 0)
+    {
+        for (const user of quizUsersData ) {
+            const option = document.createElement('option');
+            option.value = user.name;
+            option.innerHTML = user.name;
+            select.appendChild(option)
+        }
+    }
+}
+
 createHomePage();
+goStats();
