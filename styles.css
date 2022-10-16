@@ -6,13 +6,14 @@
     --altura-footer: 45px;
 }
 
-html, body {
+html,
+body {
     height: 100%;
 }
 
 body {
     background-image: linear-gradient(to top, #5ee7df 0%, #b490ca 100%);
-    background-attachment: fixed;   
+    background-attachment: fixed;
 }
 
 .hide {
@@ -81,8 +82,8 @@ main {
     width: 30%;
 }
 
-.btn-comenzar{
-     
+.btn-comenzar {
+
     font-family: 'Ribeye', cursive;
     box-shadow: rgba(0, 0, 0, 0.492) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
     color: rgb(0, 0, 0);
@@ -92,7 +93,7 @@ main {
     letter-spacing: 0.05rem;
     border: 1px solid #0E1822;
     padding: 0.8rem 2.1rem;
-    background-image: linear-gradient(to right, #eea2a2 0%, #bbc1bf 19%, #57c6e1 42%, #b49fda 79%, #7ac5d8 100%); 
+    background-image: linear-gradient(to right, #eea2a2 0%, #bbc1bf 19%, #57c6e1 42%, #b49fda 79%, #7ac5d8 100%);
     background-color: #f8b6d386;
     background-size: 200%;
     background-position: 200%;
@@ -101,15 +102,15 @@ main {
     transition-property: background-position, border, color;
     position: relative;
     z-index: 1;
-   }
-   
-   .btn-comenzar:hover {
+}
+
+.btn-comenzar:hover {
     border: 1px solid #bfbcd1;
     color: white;
     background-position: 40%;
-   }
-   
-   .btn-comenzar:before {
+}
+
+.btn-comenzar:before {
     content: "";
     position: absolute;
     background-color: #0E1822;
@@ -118,17 +119,17 @@ main {
     top: -1px;
     left: -1px;
     transition: background-color 0.15s ease-in-out;
-   }
-   
-   .btn-comenzar:hover:before {
+}
+
+.btn-comenzar:hover:before {
     background-color: white;
-   }
-   
-   .btn-comenzar:hover:after {
+}
+
+.btn-comenzar:hover:after {
     background-color: white;
-   }
-   
-   .btn-comenzar:after {
+}
+
+.btn-comenzar:after {
     content: "";
     position: absolute;
     background-color: #000000;
@@ -137,15 +138,15 @@ main {
     bottom: -1px;
     right: -1px;
     transition: background-color 0.15s ease-in-out;
-   }
-   
-   .btn-comenzar-borders {
+}
+
+.btn-comenzar-borders {
     position: relative;
     width: fit-content;
     height: fit-content;
-   }
-   
-   .btn-comenzar-borders:before {
+}
+
+.btn-comenzar-borders:before {
     content: "";
     position: absolute;
     width: calc(100% + 0.5em);
@@ -154,10 +155,9 @@ main {
     top: -0.3em;
     border: 1px solid #0E1822;
     border-bottom: 0px;
-       /* opacity: 0.3; */
-   }
-   
-   .btn-comenzar-borders:after {
+}
+
+.btn-comenzar-borders:after {
     content: "";
     position: absolute;
     width: calc(100% + 0.5em);
@@ -166,14 +166,13 @@ main {
     bottom: -0.3em;
     border: 1px solid #0E1822;
     border-top: 0px;
-       /* opacity: 0.3; */
     z-index: 0;
-   }
-   
-   .shape {
+}
+
+.shape {
     fill: #0E1822;
-   }
-   
+}
+
 
 .btn-comenzar:disabled {
     opacity: 0.35;
@@ -218,19 +217,56 @@ main {
     width: 100%;
 }
 
+
 #select-user-form .form-select {
     max-width: 40%;
 }
 
 .graphics-container {
-    flex: 25;
     display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.chart-legend {
+    display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+    width: 45%;
+    gap: 5px;
+}
+
+.graphics-data-container {
+    margin-bottom: 20px;
+}
+
+.graphic-title {
+    text-align: center;
+    margin: 30px auto;
 }
 
 .mychart-container {
-    width: 35%;
+    width: 27%;
+    align-self: center;
+}
+
+.color-label {
+    height: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.color-label .color {
+    width: 30px;
+    height: 14px;
+}
+
+.color-label .label {
+    font-size: 14px;
 }
 
 .back {
@@ -298,7 +334,7 @@ p {
 }
 
 .hqr-contenedor {
-    background-color:white;
+    background-color: white;
     box-shadow: rgba(245, 240, 240, 0.471) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
     border-radius: 30px;
     width: 70%;
@@ -378,7 +414,7 @@ p {
 }
 
 .copyright {
-    color: grey; 
+    color: grey;
 }
 
 .icons {
@@ -392,7 +428,8 @@ p {
     text-align: center;
 }
 
-th, td {
+th,
+td {
     text-align: center;
     border: 1px solid black;
 }
@@ -408,6 +445,7 @@ th, td {
     width: 5%;
     height: 5%;
     opacity: 0.3;
+    align-self: center;
 }
 
 .arrow:hover {

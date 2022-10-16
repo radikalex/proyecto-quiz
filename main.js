@@ -64,7 +64,7 @@ function obtenerPreguntas() {
                 numPreguntas = cantidad;
                 divLoading.classList.replace('loading', 'hide');
                 divQuestion.classList.replace('hide', 'question');
-                ponerPregunta(questions.results[indexPregunta])
+                ponerPregunta(questions.results[indexPregunta]);
         })
         .catch((err) => console.error(err));
 }
@@ -123,7 +123,8 @@ function ponerPregunta(pregunta) {
     } else {
         const btn_siguientePregunta = document.createElement('button')
         btn_siguientePregunta.className = "btn-comenzar siguiente-pregunta"
-        btn_siguientePregunta.innerHTML = "End Quiz"
+        btn_siguientePregunta.innerHTML = "End Quiz";
+        btn_siguientePregunta.disabled = true;
         btn_siguientePregunta.addEventListener('click', finalizarTest)
         divPregunta.appendChild(btn_siguientePregunta)
     }
@@ -344,7 +345,6 @@ function comenzarTest(e) {
 function createHomePage() {
     divHome.innerHTML = 
     `
-       
         <form class="form-quiz" onsubmit="comenzarTest(event)">
             <label for="name">Your name:</label>
             <input type="text" id="name" name="name" class="form-control"> <br>
@@ -764,6 +764,46 @@ function getDataUsers() {
 }
 
 // ----------------------------    Stats Logic   --------------------------------------------
+const labelsColors = [
+    "rgb(96, 162, 15)",
+    "rgb(197, 101, 103)",
+    "rgb(254, 39, 206)",
+    "rgb(143, 111, 233)",
+    "rgb(227, 59, 92)",
+    "rgb(82, 225, 110)",
+    "rgb(169, 238, 128)",
+    "rgb(199, 194, 124)",
+    "rgb(114, 195, 155)",
+    "rgb(226, 251, 169)",
+    "rgb(142, 55, 24)",
+    "rgb(240, 183, 96)",
+    "rgb(18, 74, 183)",
+    "rgb(239, 99, 63)",
+    "rgb(66, 2, 109",
+    "rgb(251, 62, 196)",
+    "rgb(60, 107, 235)",
+    "rgb(139, 19, 144)",
+    "rgb(87, 142, 83)",
+    "rgb(128, 61, 200)",
+    "rgb(94, 224, 239)",
+    "rgb(183, 180, 56)",
+    "rgb(148, 164, 232)",
+    "rgb(147, 156, 138)"
+]
+
+let actualGraphic = 0;
+const numberGraphics = 1;
+
+function nextGraphic() {
+    actualGraphic = (actualGraphic + 1) % numberGraphics;
+    createGraphicsForUser();
+}
+
+function previousGraphic() {
+    actualGraphic = (actualGraphic + numberGraphics + 1) % numberGraphics;
+    createGraphicsForUser();
+}
+
 function goStats() {
     hideAllViews();
     statsDiv.classList.replace('hide', 'stats');
@@ -795,53 +835,81 @@ function createStats() {
     userStatsSelectDiv.appendChild(form);
     statsDiv.appendChild(userStatsSelectDiv);
 
+    const divGraphicsData = document.createElement('div');
+    divGraphicsData.className = "graphics-data-container"
+    statsDiv.appendChild(divGraphicsData);
+    const divTitleGraphicsData = document.createElement('div');
+    divTitleGraphicsData.className = "graphic-title";
+    const h1 = document.createElement('h1');
+    h1.innerHTML = `Number of questions done for each category`;
+    divTitleGraphicsData.appendChild(h1);
+    divGraphicsData.appendChild(divTitleGraphicsData);
     const userStatsGraphicsDiv = document.createElement('div');
     userStatsGraphicsDiv.id = 'graphics-container';
     userStatsGraphicsDiv.className = 'graphics-container';
-    statsDiv.appendChild(userStatsGraphicsDiv);
-    createGraphicsForUser(select.value);
+    divGraphicsData.appendChild(userStatsGraphicsDiv);
+    createGraphicsForUser();
     
     const button = document.createElement('button');
     button.innerHTML = 'Go to main page';
     button.className = 'btn-comenzar back';
     button.onclick = irPaginaPrincipal;
     statsDiv.appendChild(button);
-
 }
 
-function createGraphicsForUser(user) {
+function createGraphicsForUser() {
     const parentDiv = document.getElementById('graphics-container');
 
     while(parentDiv.firstChild) {
         parentDiv.removeChild(parentDiv.firstChild);
     }
 
+    const left_arrow = document.createElement('img');
+    left_arrow.src = 'assets/left-arrow.png'
+    left_arrow.onclick = previousGraphic;
+    left_arrow.className = 'arrow'
+    parentDiv.appendChild(left_arrow);
+
+    const info = getUserDataEachCategory();
     const divLegend = document.createElement('div'); 
     divLegend.className = "chart-legend";
     divLegend.id = "chart-legend";
+    for (const key in labelsColors) {
+        divLegend.innerHTML += 
+        `
+            <div class="color-label">
+                <div class="color" style="background-color: ${labelsColors[key]}"></div>
+                <div class="label">${info[0][key]}</div>
+            </div>
+        `
+    }
     parentDiv.appendChild(divLegend);
-
 
     const divChart = document.createElement('div');
     divChart.className = 'mychart-container'
     const canvas = document.createElement('canvas');
     canvas.id = 'myChart';
-    showGraphics(canvas);
+    showGraphics(canvas, info);
     divChart.appendChild(canvas);
     parentDiv.appendChild(divChart);
+
+    const right_arrow = document.createElement('img');
+    right_arrow.src = 'assets/right-arrow.png'
+    right_arrow.onclick = nextGraphic;
+    right_arrow.className = 'arrow';
+    parentDiv.appendChild(right_arrow);
 }
 
 function changeUser() {
-    createGraphicsForUser(this.value);
+    createGraphicsForUser();
 }
 
-function showGraphics(canvas) {
-    pieGraphic(canvas);
+function showGraphics(canvas, info) {
+    pieGraphic(canvas, info);
 }
 
-function pieGraphic(canvas) {
+function pieGraphic(canvas, info) {
     const ctx = canvas.getContext('2d');
-    const info = getUserDataEachCategory();
     const labels = info[0];
     const dataValues = info[1];
     const data = {
@@ -849,32 +917,7 @@ function pieGraphic(canvas) {
     datasets: [
         {
         label: "Mi primera gráfica",
-        backgroundColor: [
-            "rgb(96, 162, 15)",
-            "rgb(197, 101, 103)",
-            "rgb(254, 39, 206)",
-            "rgb(143, 111, 233)",
-            "rgb(227, 59, 92)",
-            "rgb(82, 225, 110)",
-            "rgb(169, 238, 128)",
-            "rgb(199, 194, 124)",
-            "rgb(214, 195, 155)",
-            "rgb(226, 251, 169)",
-            "rgb(142, 55, 24)",
-            "rgb(240, 183, 96)",
-            "rgb(18, 74, 183)",
-            "rgb(239, 99, 63)",
-            "rgb(66, 2, 109",
-            "rgb(251, 62, 196)",
-            "rgb(60, 107, 235)",
-            "rgb(139, 19, 144)",
-            "rgb(87, 142, 83)",
-            "rgb(128, 61, 200)",
-            "rgb(94, 224, 239)",
-            "rgb(183, 180, 56)",
-            "rgb(148, 164, 232)",
-            "rgb(147, 156, 138)"
-        ],
+        backgroundColor: labelsColors,
         data: dataValues,
         },
     ],
@@ -894,8 +937,7 @@ function pieGraphic(canvas) {
                         size: 14
                     }
                 }
-            }
-            
+            } 
         }
     },
     };
