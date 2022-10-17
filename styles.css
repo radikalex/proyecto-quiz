@@ -269,7 +269,7 @@ main {
 .buttons-result {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 30px;
 }
 
 .loading {
@@ -326,7 +326,24 @@ main {
     gap: 5px;
 }
 
+.chart-legend-doughnut {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
 .chart-legend-horizontal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.chart-legend-bar {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -356,13 +373,13 @@ main {
 }
 
 .mychart-container-horizontalBar {
-    width: 90%;
+    width: 70%;
     height: 30vh;
     align-self: center;
 }
 
 .mychart-container-doughnut {
-    width: 100%;
+    width: 50%;
     height: 33vh;
     align-self: center;
 }
@@ -378,15 +395,32 @@ main {
 .doughnut-container {
     width: 50%;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 30px;
 }
 
+.doughnut-container .color-label {
+    height: 1vw;
+    gap: 10px;
+}
+
+.doughnut-container .color-label .label {
+    font-size: 1vw;
+}
+
+.horizontal-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 5%;
+}
 
 .color-label {
     height: 14px;
     display: flex;
     align-items: center;
+    cursor: default;
     gap: 5px;
 }
 
@@ -442,11 +476,11 @@ main {
 
 
 .gif-result {
-    width: 30vw;
+    width: 28vw;
 }
 
 .gif-result-small {
-    width: 35vw;
+    width: 33vw;
 }
 
 p {
@@ -458,7 +492,7 @@ p {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    min-height: 33.5vw;
+    min-height: 34vw;
     padding: 30px;
     width: 100%;
     background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);

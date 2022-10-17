@@ -260,22 +260,22 @@ function showResults() {
     const correctPercentage = getPercentage(score, numQuestions);
     switch(true) {
         case correctPercentage < 50:
-            gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088200159252/1-4.gif";
+            gifUrl = "/assets/gifs/1-4.gif";
             gifClass = 'gif-result-small';
             textResult= "What happened? You can do it better! Do the test again and it will get better and better, keep trying"
             break;
         case correctPercentage < 70:
-            gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088627966102/5-6.gif";
+            gifUrl = "/assets/gifs/5-6.gif";
             gifClass = 'gif-result';
             textResult= "Not bad, but keep trying!"
             break;
         case correctPercentage < 90:
-            gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089085157406/7-8.gif";
+            gifUrl = "/assets/gifs/7-8.gif";
             gifClass = 'gif-result';
             textResult= "Hey, you almost made it... You're on the right track, keep trying"
             break;
         case correctPercentage >= 90:
-            gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089559097424/9-10.gif";
+            gifUrl = "/assets/gifs/9-10.gif";
             gifClass = 'gif-result';
             textResult= "You've made it! congratulations, you have many other options too, keep playing!"
             break;
@@ -287,7 +287,7 @@ function showResults() {
     <h1>Your score was ${score}/${numQuestions}</h1>
     <p>${textResult}</p>
     <img src="${gifUrl}" alt="asdf" class="${gifClass}">
-    <div class="botones-result">
+    <div class="buttons-result">
         <button class="btn-quiz" onclick="restartQuiz()">Restart Quiz</button>
         <button class="btn-quiz" onclick="goMainPage()">Go to main page</button>
     </div> 
@@ -307,6 +307,10 @@ function restartQuiz() {
 }
 
 function goMainPage() {
+    document.getElementById('name').value = "";
+    document.getElementById('amount').value = "10";
+    document.getElementById('category').value = "";
+    document.getElementById('difficulty').value = "";
     hideAllViews();
     homeDiv.classList.replace('hide', 'home')
 }
@@ -396,6 +400,7 @@ let actualTable = 0;
 const numberTables = 5;
 
 function goClassification() {
+    actualTable = 0;
     hideAllViews();
     classDiv.classList.replace('hide', 'classification');
     createClassification();
@@ -756,34 +761,35 @@ function getDataUsers() {
 
 // ----------------------------    Stats Logic   --------------------------------------------
 const labelsColors = [
-    "rgb(96, 162, 15)",
-    "rgb(197, 101, 103)",
-    "rgb(254, 39, 206)",
-    "rgb(143, 111, 233)",
-    "rgb(227, 59, 92)",
-    "rgb(82, 225, 110)",
-    "rgb(169, 238, 128)",
-    "rgb(199, 194, 124)",
-    "rgb(114, 195, 155)",
-    "rgb(226, 251, 169)",
-    "rgb(142, 55, 24)",
-    "rgb(240, 183, 96)",
-    "rgb(18, 74, 183)",
-    "rgb(239, 99, 63)",
-    "rgb(66, 2, 109",
-    "rgb(251, 62, 196)",
-    "rgb(60, 107, 235)",
-    "rgb(139, 19, 144)",
-    "rgb(87, 142, 83)",
-    "rgb(128, 61, 200)",
-    "rgb(94, 224, 239)",
-    "rgb(183, 180, 56)",
-    "rgb(148, 164, 232)",
-    "rgb(147, 156, 138)"
+    "rgba(96, 162, 15, 1)",
+    "rgba(197, 101, 103, 1)",
+    "rgba(254, 39, 206, 1)",
+    "rgba(143, 111, 233, 1)",
+    "rgba(227, 59, 92, 1)",
+    "rgba(82, 225, 110, 1)",
+    "rgba(169, 238, 128, 1)",
+    "rgba(199, 194, 124, 1)",
+    "rgba(114, 195, 155, 1)",
+    "rgba(226, 251, 169, 1)",
+    "rgba(142, 55, 24, 1)",
+    "rgba(240, 183, 96, 1)",
+    "rgba(18, 74, 183, 1)",
+    "rgba(239, 99, 63, 1)",
+    "rgba(66, 2, 109, 1)",
+    "rgba(251, 62, 196, 1)",
+    "rgba(60, 107, 235, 1)",
+    "rgba(139, 19, 144, 1)",
+    "rgba(87, 142, 83, 1)",
+    "rgba(128, 61, 200, 1)",
+    "rgba(94, 224, 239, 1)",
+    "rgba(183, 180, 56, 1)",
+    "rgba(148, 164, 232, 1)",
+    "rgba(147, 156, 13, 1)"
 ]
 
-let actualGraphic = 3;
+let actualGraphic = 0;
 const numberGraphics = 4;
+let myChart;
 
 function nextGraphic() {
     actualGraphic = (actualGraphic + 1) % numberGraphics;
@@ -796,6 +802,7 @@ function previousGraphic() {
 }
 
 function goStats() {
+    actualGraphic = 0;
     hideAllViews();
     statsDiv.classList.replace('hide', 'stats');
     createStats();
@@ -894,6 +901,31 @@ function changeUser() {
     createGraphicsForUser();
 }
 
+function legendOver(e) {
+    const colors = document.querySelectorAll(".color");
+    const colorSelected = e.currentTarget.childNodes[1].style.backgroundColor.replace(/rgb\([0-9]{1,3},\s[0-9]{1,3},\s[0-9]{1,3}/, "$&, 1").replace("rgb(", "rgba(");
+    for (let i = 0; i < myChart.data.datasets[0].backgroundColor.length; i++) {
+        if (myChart.data.datasets[0].backgroundColor[i] !== colorSelected ) {
+            myChart.data.datasets[0].backgroundColor[i] = myChart.data.datasets[0].backgroundColor[i].replace(", 1)", ", 0.2)")
+            colors[i].style.backgroundColor = colors[i].style.backgroundColor.replace(/rgb\([0-9]{1,3},\s[0-9]{1,3},\s[0-9]{1,3}/, "$&, 0.2").replace("rgb(", "rgba(");
+        }
+        else {
+            myChart.tooltip.setActiveElements([ {datasetIndex: 0, index: i} ])
+        }
+    }
+    myChart.update();
+}
+
+function legendOut(e) {
+    const colors = document.querySelectorAll(".color");
+    for (let i = 0; i < myChart.data.datasets[0].backgroundColor.length; i++) {
+        myChart.data.datasets[0].backgroundColor[i] = myChart.data.datasets[0].backgroundColor[i].replace(", 0.2)", ", 1)");
+        colors[i].style.backgroundColor = colors[i].style.backgroundColor.replace(", 0.2)", ", 1)");
+    }
+    myChart.tooltip.setActiveElements([])
+    myChart.update();
+}
+
 function createPieGraphicData(parentDiv) {
     const info = getUserDataNumberEachCategory();
     const divLegend = document.createElement('div'); 
@@ -902,7 +934,7 @@ function createPieGraphicData(parentDiv) {
     for (const key in labelsColors) {
         divLegend.innerHTML += 
         `
-            <div class="color-label">
+            <div class="color-label" onmouseover="legendOver(event)" onmouseout="legendOut(event)">
                 <div class="color" style="background-color: ${labelsColors[key]}"></div>
                 <div class="label">${info[0][key]}</div>
             </div>
@@ -945,7 +977,7 @@ function pieGraphic(canvas, info) {
     },
     };
 
-    const myChart = new Chart(ctx, config);
+    myChart = new Chart(ctx, config);
 }
 
 function createDoughnutGraphicData(parentDiv) {
@@ -953,6 +985,19 @@ function createDoughnutGraphicData(parentDiv) {
 
     const divBarContainer = document.createElement('div'); 
     divBarContainer.className = "doughnut-container"
+    const divLegend = document.createElement('div'); 
+    divLegend.className = "chart-legend-doughnut";
+    divLegend.id = "chart-legend-doughnut";
+    for (const key in labelsColors.slice(0, 5)) {
+        divLegend.innerHTML += 
+        `
+            <div class="color-label" onmouseover="legendOver(event)" onmouseout="legendOut(event)">
+                <div class="color" style="background-color: ${labelsColors[key]}"></div>
+                <div class="label">${info[0][key]}</div>
+            </div>
+        `
+    }
+    divBarContainer.appendChild(divLegend);
 
     const divChart = document.createElement('div');
     divChart.className = 'mychart-container-doughnut'
@@ -973,7 +1018,7 @@ function doughnutGraphic(canvas, info) {
         labels: labels,
         datasets: [{
             data: dataValues,
-            backgroundColor: labelsColors,
+            backgroundColor: labelsColors.slice(0, 5),
         }]
     };
 
@@ -984,26 +1029,33 @@ function doughnutGraphic(canvas, info) {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'left',
-                    display: true,
-                    labels: {
-                        font: {
-                            size: 16
-                        }
-                    }
+                    display: false,
                 } 
             }
         },
     };
     
-    const myChart = new Chart(ctx, config);
+    myChart = new Chart(ctx, config);
 }
 
 function createHorizontalBarGraphicData(parentDiv) {
     const info = getPercentageQuizs();
 
     const divBarContainer = document.createElement('div'); 
-    divBarContainer.className = "bar-container"
+    divBarContainer.className = "horizontal-container"
+    const divLegend = document.createElement('div'); 
+    divLegend.className = "chart-legend-horizontal";
+    divLegend.id = "chart-legend-horizontal";
+    for (const key in labelsColors.slice(0, 5)) {
+        divLegend.innerHTML += 
+        `
+            <div class="color-label" onmouseover="legendOver(event)" onmouseout="legendOut(event)">
+                <div class="color" style="background-color: ${labelsColors[key]}"></div>
+                <div class="label">${info[0][key]}</div>
+            </div>
+        `
+    }
+    divBarContainer.appendChild(divLegend);
 
     const divChart = document.createElement('div');
     divChart.className = 'mychart-container-horizontalBar'
@@ -1024,7 +1076,7 @@ function horizontalBarGraphic(canvas, info) {
         labels: labels,
         datasets: [{
             data: dataValues,
-            backgroundColor: labelsColors,
+            backgroundColor: labelsColors.slice(0, 5),
         }]
     };
 
@@ -1039,11 +1091,7 @@ function horizontalBarGraphic(canvas, info) {
                 },
                 y: {
                     ticks: {
-                        min: 0,
-                        max: 100,
-                        font: {
-                            size: 16,
-                        }
+                        display: false
                     }
                 },
             },
@@ -1059,7 +1107,7 @@ function horizontalBarGraphic(canvas, info) {
         },
     };
     
-    const myChart = new Chart(ctx, config);
+    myChart = new Chart(ctx, config);
 }
 
 function createBarGraphicData(parentDiv) {
@@ -1068,12 +1116,12 @@ function createBarGraphicData(parentDiv) {
     const divBarContainer = document.createElement('div'); 
     divBarContainer.className = "bar-container"
     const divLegend = document.createElement('div'); 
-    divLegend.className = "chart-legend-horizontal";
-    divLegend.id = "chart-legend-horizontal";
+    divLegend.className = "chart-legend-bar";
+    divLegend.id = "chart-legend-bar";
     for (const key in labelsColors) {
         divLegend.innerHTML += 
         `
-            <div class="color-label">
+            <div class="color-label"  onmouseover="legendOver(event)" onmouseout="legendOut(event)">
                 <div class="color" style="background-color: ${labelsColors[key]}"></div>
                 <div class="label">${info[0][key]}</div>
             </div>
@@ -1130,7 +1178,7 @@ function barGraphic(canvas, info) {
         },
     };
     
-    const myChart = new Chart(ctx, config);
+    myChart = new Chart(ctx, config);
 }
 
 function getUserDataNumberEachCategory() {
@@ -1340,6 +1388,22 @@ function fillUserSelect (select) {
             select.appendChild(option)
         }
     }
+}
+
+function handleLeave(evt, item, legend) {
+    legend.chart.data.datasets[0].backgroundColor.forEach( (color, index, colors) => {
+            colors[index] = color.replace(", 0.2)", ", 1)");
+        }
+    );
+    legend.chart.update();
+}
+
+function handleHover(evt, item, legend) {
+    legend.chart.data.datasets[0].backgroundColor.forEach( (color, index, colors) => {
+            colors[index] = index === item.index ? color : color.replace(", 1)", ", 0.2)"); 
+        }
+    );
+    legend.chart.update();
 }
 
 createHomePage();
