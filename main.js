@@ -262,19 +262,22 @@ function showResults() {
         case correctPercentage < 50:
             gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088200159252/1-4.gif";
             gifClass = 'gif-result-small';
-            textResult= "bad"
+            textResult= "What happened? ¡You can do it better! Do the test again and it will get better and better, keep trying"
             break;
         case correctPercentage < 70:
             gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088627966102/5-6.gif";
             gifClass = 'gif-result';
+            textResult= "Not bad, but keep trying!"
             break;
         case correctPercentage < 90:
             gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089085157406/7-8.gif";
             gifClass = 'gif-result';
+            textResult= "Hey, you almost made it... You're on the right track, keep trying"
             break;
         case correctPercentage >= 90:
             gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089559097424/9-10.gif";
             gifClass = 'gif-result';
+            textResult= "You've made it! congratulations, you have many other options too, keep playing!"
             break;
         default:
             console.log('Some error showing results.');

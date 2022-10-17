@@ -16,6 +16,10 @@ body {
 body {
     background-image: linear-gradient(to top, #5ee7df 0%, #b490ca 100%);
     background-attachment: fixed;
+    font-family: 'Arima', cursive;
+    font-size:20px ;
+    text-align: center;
+
 }
 
 .hide {
@@ -440,6 +444,8 @@ p {
     min-height: 33.5vw;
     padding: 30px;
     width: 100%;
+    background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+    border-radius: 30px;
 }
 
 .classification {
@@ -579,3 +585,6 @@ td {
     cursor: pointer;
 }
 
+.textResult{
+    font-family: 'Arima', cursive;
+}
