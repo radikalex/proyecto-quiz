@@ -98,7 +98,7 @@ function setQuestion(question) {
     if(question.type !== 'boolean') {
         answers = [question.correct_answer, ...question.incorrect_answers]
         shuffleAnswers(answers);
-        hexaColors = ['#E11B3E', '#1467CF', '#D69E01', '#28880D'];
+        hexaColors = ['#F781F3', '#01DFD7', '#00BFFF', '#8181F7'];
     } else {
         answers = ['True', 'False']
         hexaColors = ['#00FF48', '#FF0000'];
