@@ -272,6 +272,12 @@ main {
     align-self: center;
 }
 
+.mychart-container-horizontalBar {
+    width: 90%;
+    height: 30vh;
+    align-self: center;
+}
+
 .bar-container {
     width: 90%;
     display: flex;

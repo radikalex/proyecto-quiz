@@ -778,8 +778,8 @@ const labelsColors = [
     "rgb(147, 156, 138)"
 ]
 
-let actualGraphic = 0;
-const numberGraphics = 2;
+let actualGraphic = 2;
+const numberGraphics = 3;
 
 function nextGraphic() {
     actualGraphic = (actualGraphic + 1) % numberGraphics;
@@ -867,6 +867,10 @@ function createGraphicsForUser() {
             h1.innerHTML = `Percentage of correct answers for each category`;
             createBarGraphicData(parentDiv);
             break;
+        case 2:
+            h1.innerHTML = `Numbers of quizs done for each numer of questions`;
+            createHorizontalBarGraphicData(parentDiv);
+            break;
         default:
             console.error('Error. Graph index not contemplated.');
     }
@@ -933,6 +937,65 @@ function pieGraphic(canvas, info) {
     },
     };
 
+    const myChart = new Chart(ctx, config);
+}
+
+function createHorizontalBarGraphicData(parentDiv) {
+    const info = getUserDataQuizsDone();
+
+    const divBarContainer = document.createElement('div'); 
+    divBarContainer.className = "bar-container"
+
+    const divChart = document.createElement('div');
+    divChart.className = 'mychart-container-horizontalBar'
+    const canvas = document.createElement('canvas');
+    canvas.id = 'myChart';
+    horizontalBarGraphic(canvas, info);
+    divChart.appendChild(canvas);
+    divBarContainer.appendChild(divChart);
+    
+    parentDiv.appendChild(divBarContainer);
+}
+
+function horizontalBarGraphic(canvas, info) {
+    const ctx = canvas.getContext('2d');
+    const labels = info[0];
+    const dataValues = info[1];
+    const data = {
+        labels: labels,
+        datasets: [{
+            data: dataValues,
+            backgroundColor: labelsColors,
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            indexAxis: 'y',
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+                x: {
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            labels: {
+                display: false
+            },
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                } 
+            }
+        },
+    };
+    
     const myChart = new Chart(ctx, config);
 }
 
@@ -1063,6 +1126,61 @@ function getUserDataPercentageCategory() {
             }
         }
     }
+
+    return result;
+}
+
+function getUserDataQuizsDone() {
+    const quizUsersData = JSON.parse(localStorage.getItem("quiz_data")).users || [];
+    const userName = document.getElementById('users-select').value;
+    const result = [['Quiz of 10 questions', 'Quiz of 20 questions', 'Quiz of 30 questions', 'Quiz of 40 questions', 'Quiz of 50 questions'], [0, 0, 0, 0, 0]]
+
+    if(userName === 'all') {
+        for (const user of quizUsersData) {
+            for (const quiz of user.quizsDone) {
+                switch(quiz.numQuestions) {
+                    case "10":
+                        result[1][0]++;
+                        break;
+                    case "20":
+                        result[1][1]++;
+                        break;
+                    case "30":
+                        result[1][2]++;
+                        break;
+                    case "40":
+                        result[1][3]++;
+                        break;
+                    case "50":
+                        result[1][4]++;
+                        break;
+                }
+            }
+        }
+    } else {
+        const indexUser = findUserByName(userName);
+        for (const quiz of quizUsersData[indexUser].quizsDone) {
+            switch(quiz.numQuestions) {
+                case "10":
+                    result[1][0]++;
+                    break;
+                case "20":
+                    result[1][1]++;
+                    break;
+                case "30":
+                    result[1][2]++;
+                    break;
+                case "40":
+                    result[1][3]++;
+                    break;
+                case "50":
+                    result[1][4]++;
+                    break;
+            }
+        }
+    }
+
+    console.log(result);
 
     return result;
 }
