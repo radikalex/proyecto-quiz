@@ -1,16 +1,15 @@
-const divHome = document.getElementById('home')
-const divPregunta = document.getElementById('pregunta')
-const divQuestion = document.getElementById('question')
-const divResult = document.getElementById('result')
-const divPrincipal = document.getElementById('contenedor-principal');
-const divLoading = document.getElementById('loading')
+const homeDiv = document.getElementById('home')
+const questionDiv = document.getElementById('question')
+const questionContainerDiv = document.getElementById('question-container')
+const resultDiv = document.getElementById('result')
+const loadingDiv = document.getElementById('loading')
 const mainDiV = document.getElementById('main');
 const classDiv = document.getElementById('classification');
 const statsDiv = document.getElementById('stats');
 
-let nota = 0;
-let numPreguntas = 0;
-let indexPregunta = 0;
+let score = 0;
+let numQuestions = 0;
+let questionIndex = 0;
 let userName;
 
 
@@ -49,22 +48,22 @@ const categories = {
 
 let categoriesData = []
 
-/* -------------------------------- Lógica del quiz ---------------------------------- */
+/* -------------------------------- Quiz Logic ---------------------------------- */
 
-function obtenerPreguntas() {
-    const cantidad = document.getElementById('cantidad').value;
-    const categoria = document.getElementById('categoria').value;
-    const dificultad = document.getElementById('dificultad').value;
+function getQuestions() {
+    const amount = document.getElementById('amount').value;
+    const category = document.getElementById('category').value;
+    const difficulty = document.getElementById('difficulty').value;
     initCategoriesData();
 
     axios
-        .get(`https://opentdb.com/api.php?amount=${cantidad}&category=${categoria}&difficulty=${dificultad}`)
+        .get(`https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}`)
         .then((res) => {   
                 questions = res.data;
-                numPreguntas = cantidad;
-                divLoading.classList.replace('loading', 'hide');
-                divQuestion.classList.replace('hide', 'question');
-                ponerPregunta(questions.results[indexPregunta]);
+                numQuestions = amount;
+                loadingDiv.classList.replace('loading', 'hide');
+                questionContainerDiv.classList.replace('hide', 'question');
+                setQuestion(questions.results[questionIndex]);
         })
         .catch((err) => console.error(err));
 }
@@ -81,103 +80,96 @@ function initCategoriesData() {
     }
 }
 
-function ponerPregunta(pregunta) {
+function setQuestion(question) {
 
-    // Borrar pregunta anterior si hay
-    while(divPregunta.firstChild) {
-        divPregunta.removeChild(divPregunta.firstChild)
+    while(questionDiv.firstChild) {
+        questionDiv.removeChild(questionDiv.firstChild)
     }
 
-    // Numero de pregunta y puntuación
-    const divHeader = document.getElementById('pregunta-header')
+    const divHeader = document.getElementById('question-header')
     divHeader.className = 'mb-4'
-    divHeader.innerHTML = `<span>Question ${indexPregunta + 1}</span> <span>Score: <span id='nota'>${nota}<span>/${numPreguntas} </span>`
+    divHeader.innerHTML = `<span>Question ${questionIndex + 1}</span> <span>Score: <span id='score'>${score}<span>/${numQuestions} </span>`
 
-    // Poner la pregunta
-    const divPreguntaActual = document.createElement('div');
-    divPreguntaActual.innerHTML = `<h1>${pregunta.question}</h1>`;
-    divPregunta.appendChild(divPreguntaActual);
+    const questionDivActual = document.createElement('div');
+    questionDivActual.innerHTML = `<h1>${question.question}</h1>`;
+    questionDiv.appendChild(questionDivActual);
 
-    // Generar respuestas a la pregunta
-    let respuestas, hexaColors;
-    if(pregunta.type !== 'boolean') {
-        respuestas = [pregunta.correct_answer, ...pregunta.incorrect_answers]
-        // Desordenar las respuestas si no son solo True o False
-        desordenarRespuestas(respuestas);
+    let answers, hexaColors;
+    if(question.type !== 'boolean') {
+        answers = [question.correct_answer, ...question.incorrect_answers]
+        shuffleAnswers(answers);
         hexaColors = ['#E11B3E', '#1467CF', '#D69E01', '#28880D'];
     } else {
-        respuestas = ['True', 'False']
+        answers = ['True', 'False']
         hexaColors = ['#00FF48', '#FF0000'];
     }
-    crearRespuestas(respuestas, hexaColors)
+    createAnswers(answers, hexaColors)
 
-
-    // Boton para pasar a la siguiente pregunta
-    if(questions.results.length > indexPregunta + 1) {
-        const btn_siguientePregunta = document.createElement('button')
-        btn_siguientePregunta.className = "btn-comenzar siguiente-pregunta"
-        btn_siguientePregunta.innerHTML = "Next Question"
-        btn_siguientePregunta.disabled = true;
-        btn_siguientePregunta.addEventListener('click', siguientePregunta)
-        divPregunta.appendChild(btn_siguientePregunta)
+    if(questions.results.length > questionIndex + 1) {
+        const btn_nextQuestion = document.createElement('button')
+        btn_nextQuestion.className = "btn-quiz next-question"
+        btn_nextQuestion.innerHTML = "Next Question"
+        btn_nextQuestion.disabled = true;
+        btn_nextQuestion.addEventListener('click', nextQuestion)
+        questionDiv.appendChild(btn_nextQuestion)
     } else {
-        const btn_siguientePregunta = document.createElement('button')
-        btn_siguientePregunta.className = "btn-comenzar siguiente-pregunta"
-        btn_siguientePregunta.innerHTML = "End Quiz";
-        btn_siguientePregunta.disabled = true;
-        btn_siguientePregunta.addEventListener('click', finalizarTest)
-        divPregunta.appendChild(btn_siguientePregunta)
+        const btn_endQuiz = document.createElement('button')
+        btn_endQuiz.className = "btn-quiz next-question"
+        btn_endQuiz.innerHTML = "End Quiz";
+        btn_endQuiz.disabled = true;
+        btn_endQuiz.addEventListener('click', endQuiz)
+        questionDiv.appendChild(btn_endQuiz)
     }
 }
 
-function crearRespuestas(respuestas, hexaColors) {
+function createAnswers(answers, hexaColors) {
 
-    const divRespuestasMultiples = document.createElement('div')
-    divRespuestasMultiples.className = "contenedor-respuestas-multiples"
-    for (let i = 0; i < respuestas.length; i++) {
+    const answersDiv = document.createElement('div')
+    answersDiv.className = "answers-container"
+    for (let i = 0; i < answers.length; i++) {
         const button = document.createElement('button')
-        button.innerHTML = respuestas[i]
-        button.className = "respuesta"
+        button.innerHTML = answers[i]
+        button.className = "answer"
         button.style.backgroundColor = hexaColors[i];
-        button.addEventListener('click', preguntaRespondida)
-        divRespuestasMultiples.appendChild(button);
+        button.addEventListener('click', answeredQuestion)
+        answersDiv.appendChild(button);
     }
-    divPregunta.appendChild(divRespuestasMultiples);
+    questionDiv.appendChild(answersDiv);
 }
 
-function siguientePregunta(e) {
-    indexPregunta++;
-    mainDiV.className = "hqr-contenedor"
-    ponerPregunta(questions.results[indexPregunta])
+function nextQuestion(e) {
+    questionIndex++;
+    mainDiV.className = "hqr-container"
+    setQuestion(questions.results[questionIndex])
 }
 
-function preguntaRespondida() {
-    document.querySelector('.siguiente-pregunta').disabled = false;
-    if(preguntaCorrecta(this.innerText)) {
+function answeredQuestion() {
+    document.querySelector('.next-question').disabled = false;
+    if(correctAnswer(this.innerText)) {
         mainDiV.classList.add('container-correct')
-        const idxCategory = categories[questions.results[indexPregunta].category] - 9;
+        const idxCategory = categories[questions.results[questionIndex].category] - 9;
         categoriesData[idxCategory].correct_answers++;
-        nota++;
+        score++;
     } else {
         mainDiV.classList.add('container-incorrect')
-        const idxCategory = categories[questions.results[indexPregunta].category] - 9;
+        const idxCategory = categories[questions.results[questionIndex].category] - 9;
         categoriesData[idxCategory].incorrect_answers++;
     }
-    deshabilitarRespuestas();
-    document.getElementById('nota').innerText = `${nota}/${numPreguntas}`
+    disabledAnswers();
+    document.getElementById('score').innerText = `${score}/${numQuestions}`
 }
 
-function deshabilitarRespuestas() {
-    const respuestas = document.getElementsByClassName("respuesta");
-    for (const respuesta of respuestas) {
-        respuesta.disabled = true;
-        if(!preguntaCorrecta(respuesta.innerText))
-            respuesta.classList.add('respuesta-incorrecta')
+function disabledAnswers() {
+    const answers = document.getElementsByClassName("answer");
+    for (const answer of answers) {
+        answer.disabled = true;
+        if(!correctAnswer(answer.innerText))
+            answer.classList.add('wrong-answer')
     }
 }
 
-function preguntaCorrecta(respuesta) {
-    return respuesta.trim() === decodeHtml(questions.results[indexPregunta].correct_answer);
+function correctAnswer(answer) {
+    return answer.trim() === decodeHtml(questions.results[questionIndex].correct_answer);
 }
 
 function decodeHtml(html) {
@@ -186,32 +178,28 @@ function decodeHtml(html) {
     return txt.value;
 }
 
-// Función para 'barajar' un array. Obtenido de StackOverflow
-function desordenarRespuestas(respuestas) {
-    let indiceActual = respuestas.length;
-    let indiceAleatorio;
+function shuffleAnswers(answers) {
+    let currentIndex = answers.length;
+    let randomIndex;
 
-    // While there remain elements to shuffle.
-    while (indiceActual != 0) {
+    while (currentIndex != 0) {
 
-      // Pick a remaining element.
-      indiceAleatorio = Math.floor(Math.random() * indiceActual);
-      indiceActual--;
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
 
-      // And swap it with the current element.
-      [respuestas[indiceActual], respuestas[indiceAleatorio]] = [
-        respuestas[indiceAleatorio], respuestas[indiceActual]];
+      [answers[currentIndex], answers[randomIndex]] = [
+        answers[randomIndex], answers[currentIndex]];
     }
 
-    return respuestas;
+    return answers;
 }
 
-function finalizarTest() {
-    mainDiV.className = "hqr-contenedor"
-    divResult.classList.replace('hide', 'result');
-    divQuestion.classList.replace('question', 'hide');
+function endQuiz() {
+    mainDiV.className = "hqr-container"
+    resultDiv.classList.replace('hide', 'result');
+    questionContainerDiv.classList.replace('question', 'hide');
     saveDataToLocalStorage();
-    mostrarResultado();
+    showResults();
 }
 
 function saveDataToLocalStorage() {
@@ -220,9 +208,9 @@ function saveDataToLocalStorage() {
     if( userPos > -1 ) {
         // Old user
         quiz_data.users[userPos].quizsDone.push({
-            numQuestions: numPreguntas,
-            correct_answers: nota,
-            incorrect_answers: numPreguntas - nota
+            numQuestions: numQuestions,
+            correct_answers: score,
+            incorrect_answers: numQuestions - score
         });
         quiz_data.users[userPos].categoriesData = sumCategoryData(quiz_data.users[userPos].categoriesData, categoriesData);
     }
@@ -231,9 +219,9 @@ function saveDataToLocalStorage() {
         quiz_data.users.push({
             name: userName,
             quizsDone: [{
-                numQuestions: numPreguntas,
-                correct_answers: nota,
-                incorrect_answers: numPreguntas - nota
+                numQuestions: numQuestions,
+                correct_answers: score,
+                incorrect_answers: numQuestions - score
             }],
             categoriesData: categoriesData 
         })
@@ -265,91 +253,91 @@ function sumCategoryData(currentData, newData) {
     return result;
 }
 
-/* --------------------------------------------- Lógica del resultado ---------------------------------- */
+/* --------------------------------------------- Result Logic ---------------------------------- */
 
-function mostrarResultado() {
-    let gif_Url, clase_gif;
-    const porcentajeAciertos = obtenerPorcentaje(nota, numPreguntas);
+function showResults() {
+    let gifUrl, gifClass;
+    const correctPercentage = getPercentage(score, numQuestions);
     switch(true) {
-        case porcentajeAciertos < 50:
-            gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088200159252/1-4.gif";
-            clase_gif = 'gif-resultado-small';
+        case correctPercentage < 50:
+            gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088200159252/1-4.gif";
+            gifClass = 'gif-result-small';
             break;
-        case porcentajeAciertos < 70:
-            gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088627966102/5-6.gif";
-            clase_gif = 'gif-resultado';
+        case correctPercentage < 70:
+            gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088627966102/5-6.gif";
+            gifClass = 'gif-result';
             break;
-        case porcentajeAciertos < 90:
-            gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089085157406/7-8.gif";
-            clase_gif = 'gif-resultado';
+        case correctPercentage < 90:
+            gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089085157406/7-8.gif";
+            gifClass = 'gif-result';
             break;
-        case porcentajeAciertos >= 90:
-            gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089559097424/9-10.gif";
-            clase_gif = 'gif-resultado';
+        case correctPercentage >= 90:
+            gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089559097424/9-10.gif";
+            gifClass = 'gif-result';
             break;
         default:
-            console.log('Algo no ha ido bien');
+            console.log('Some error showing results.');
     }
-    divResult.innerHTML =
+    resultDiv.innerHTML =
     `
-    <h1>Your score was ${nota}/${numPreguntas}</h1>
+    <h1>Your score was ${score}/${numQuestions}</h1>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita ab sit repellendus fugit totam iusto ad soluta, quaerat in maxime nam repudiandae earum itaque velit cupiditate minima aut quas quam?</p>
-    <img src="${gif_Url}" alt="asdf" class="${clase_gif}">
-    <div class="botones-result">
-        <button class="btn-comenzar" onclick="reiniciarTest()">Restart Quiz</button>
-        <button class="btn-comenzar" onclick="irPaginaPrincipal()">Go to main page</button>
+    <img src="${gifUrl}" alt="asdf" class="${gifClass}">
+    <div class="buttons-result">
+        <button class="btn-quiz" onclick="restartQuiz()">Restart Quiz</button>
+        <button class="btn-quiz" onclick="goMainPage()">Go to main page</button>
     </div> 
     `
 }
 
-function obtenerPorcentaje(current, total) {
+function getPercentage(current, total) {
     return current*100/total;
 }
 
-function reiniciarTest() {
-    divResult.classList.replace('result', 'hide');
-    divLoading.classList.replace('hide', 'loading');
-    nota = 0;
-    indexPregunta = 0;
-    obtenerPreguntas();
+function restartQuiz() {
+    resultDiv.classList.replace('result', 'hide');
+    loadingDiv.classList.replace('hide', 'loading');
+    score = 0;
+    questionIndex = 0;
+    getQuestions();
 }
 
-function irPaginaPrincipal() {
+function goMainPage() {
     hideAllViews();
-    divHome.classList.replace('hide', 'home')
+    homeDiv.classList.replace('hide', 'home')
 }
 
 function hideAllViews() {
-    mainDiV.className = "hqr-contenedor"
+    mainDiV.className = "hqr-container"
     classDiv.classList.replace('classification', 'hide')
-    divResult.classList.replace('result', 'hide')
-    divHome.classList.replace('home', 'hide')
-    divQuestion.classList.replace('question', 'hide');
+    resultDiv.classList.replace('result', 'hide')
+    homeDiv.classList.replace('home', 'hide')
+    questionContainerDiv.classList.replace('question', 'hide');
     statsDiv.classList.replace('stats', 'hide');
 }
 
-/* --------------------------------------- Lógica de página principal ---------------------------------- */
+/* --------------------------------------- Main Page Logic ---------------------------------- */
 
-function comenzarTest(e) {
+function startQuiz(e) {
     e.preventDefault();
-    divLoading.classList.replace('hide', 'loading');
+    loadingDiv.classList.replace('hide', 'loading');
     userName = document.getElementById('name').value.trim();
     if(userName === "")
         userName = "Default"
-    indexPregunta = 0;
-    nota = 0;
-    divHome.classList.replace('home', 'hide')
-    obtenerPreguntas();
+    questionIndex = 0;
+    score = 0;
+    homeDiv.classList.replace('home', 'hide')
+    getQuestions();
 }
 
 function createHomePage() {
-    divHome.innerHTML = 
+    homeDiv.innerHTML = 
     `
-        <form class="form-quiz" onsubmit="comenzarTest(event)">
+        <form class="form-quiz" onsubmit="startQuiz(event)">
             <label for="name">Your name:</label>
             <input type="text" id="name" name="name" class="form-control"> <br>
-            <label for="cantidad"> Number of Questions: </label><br>
-            <select id="cantidad" name="cantidad" class="form-select">
+            <label for="amount"> Number of Questions: </label><br>
+            <select id="amount" name="amount" class="form-select">
                 <option value="10">10</option>
                 <option value="20">20</option>
                 <option value="30">30</option>
@@ -357,8 +345,8 @@ function createHomePage() {
                 <option value="50">50</option>
             </select>
             <br>
-            <label for="categoria">Select Category: </label><br>
-            <select name="categoria" id="categoria" class="form-select">
+            <label for="category">Select Category: </label><br>
+            <select name="category" id="category" class="form-select">
                 <option value="">Any type</option>
                 <option value="9">General Knowledge</option>
                 <option value="10">Entertainment: Books</option>
@@ -385,15 +373,15 @@ function createHomePage() {
                 <option value="31">Entertainment: Japanese Anime & Manga</option>
                 <option value="32">Entertainment: Cartoon & Animations</option>
             </select>
-            <br><label for="dificultad">Select Difficulty: </label>
-            <select name="dificultad" id="dificultad" class="form-select">
+            <br><label for="difficulty">Select Difficulty: </label>
+            <select name="difficulty" id="difficulty" class="form-select">
                 <option value="">Any type</option>
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
             </select>
         </form>
-        <button class="btn-comenzar" onclick="comenzarTest(event)">Start</button>
+        <button class="btn-quiz" onclick="startQuiz(event)">Start</button>
     `
 
 }
@@ -472,8 +460,8 @@ function createClassification() {
     classDiv.appendChild(tablesDiv)
     const button = document.createElement('button');
     button.innerHTML = 'Go to main page';
-    button.className = 'btn-comenzar';
-    button.onclick = irPaginaPrincipal;
+    button.className = 'btn-quiz';
+    button.onclick = goMainPage;
     classDiv.appendChild(button);
 }
 
@@ -718,31 +706,31 @@ function getDataUsers() {
                     info10questions.number += 1;
                     info10questions.correct_answers += quiz.correct_answers;
                     info10questions.incorrect_answers += quiz.incorrect_answers;
-                    info10questions.percentage = obtenerPorcentaje(info10questions.correct_answers, info10questions.correct_answers + info10questions.incorrect_answers );
+                    info10questions.percentage = getPercentage(info10questions.correct_answers, info10questions.correct_answers + info10questions.incorrect_answers );
                     break;
                 case "20":
                     info20questions.number += 1;
                     info20questions.correct_answers += quiz.correct_answers;
                     info20questions.incorrect_answers += quiz.incorrect_answers;
-                    info20questions.percentage = obtenerPorcentaje(info20questions.correct_answers, info20questions.correct_answers + info20questions.incorrect_answers );
+                    info20questions.percentage = getPercentage(info20questions.correct_answers, info20questions.correct_answers + info20questions.incorrect_answers );
                     break;
                 case "30":
                     info30questions.number += 1;
                     info30questions.correct_answers += quiz.correct_answers;
                     info30questions.incorrect_answers += quiz.incorrect_answers;
-                    info30questions.percentage = obtenerPorcentaje(info30questions.correct_answers, info30questions.correct_answers + info30questions.incorrect_answers );
+                    info30questions.percentage = getPercentage(info30questions.correct_answers, info30questions.correct_answers + info30questions.incorrect_answers );
                     break;
                 case "40":
                     info40questions.number += 1;
                     info40questions.correct_answers += quiz.correct_answers;
                     info40questions.incorrect_answers += quiz.incorrect_answers;
-                    info40questions.percentage = obtenerPorcentaje(info40questions.correct_answers, info40questions.correct_answers + info40questions.incorrect_answers );
+                    info40questions.percentage = getPercentage(info40questions.correct_answers, info40questions.correct_answers + info40questions.incorrect_answers );
                     break;
                 case "50":
                     info50questions.number += 1;
                     info50questions.correct_answers += quiz.correct_answers;
                     info50questions.incorrect_answers += quiz.incorrect_answers;
-                    info50questions.percentage = obtenerPorcentaje(info50questions.correct_answers, info50questions.correct_answers + info50questions.incorrect_answers );
+                    info50questions.percentage = getPercentage(info50questions.correct_answers, info50questions.correct_answers + info50questions.incorrect_answers );
                     break;
                 default:
                     console.error(`Error with ${quiz.numQuestions} questions`);
@@ -790,7 +778,7 @@ const labelsColors = [
     "rgb(147, 156, 138)"
 ]
 
-let actualGraphic = 1;
+let actualGraphic = 0;
 const numberGraphics = 2;
 
 function nextGraphic() {
@@ -851,8 +839,8 @@ function createStats() {
     
     const button = document.createElement('button');
     button.innerHTML = 'Go to main page';
-    button.className = 'btn-comenzar back';
-    button.onclick = irPaginaPrincipal;
+    button.className = 'btn-quiz back';
+    button.onclick = goMainPage;
     statsDiv.appendChild(button);
 }
 
@@ -1062,14 +1050,14 @@ function getUserDataPercentageCategory() {
             }
         }
         for (let j = 0; j < result[1].length; j++) {
-            result[1][j] = obtenerPorcentaje(result[1][j][0], result[1][j][0] + result[1][j][1]);
+            result[1][j] = getPercentage(result[1][j][0], result[1][j][0] + result[1][j][1]);
         }
     } else {
         const indexUser = findUserByName(userName);
         for (const category of quizUsersData[indexUser].categoriesData) {
             result[0].push(category.name);
             if(category.correct_answers || category.incorrect_answers) {
-                result[1].push(obtenerPorcentaje(category.correct_answers, category.correct_answers + category.incorrect_answers))
+                result[1].push(getPercentage(category.correct_answers, category.correct_answers + category.incorrect_answers))
             } else {
                 result[1].push(0);
             }
@@ -1098,4 +1086,3 @@ function fillUserSelect (select) {
 }
 
 createHomePage();
-goStats();

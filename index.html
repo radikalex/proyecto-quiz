@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proyecto Quiz</title>
+    <title>Quiz</title>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
@@ -18,7 +18,7 @@
             </div>
 
             <div class="links-container">
-                <span class="navBar-link" onclick="irPaginaPrincipal()">Quiz</span>
+                <span class="navBar-link" onclick="goMainPage()">Quiz</span>
                 <span class="navBar-link" onclick="goClassification()">Classification</span>
                 <span class="navBar-link" onclick="goStats()">Stats</span>
             </div>
@@ -26,13 +26,13 @@
     </header>
 
     <main>
-        <div id="main" class="hqr-contenedor">
+        <div id="main" class="hqr-container">
 
             <div id="home" class="home"></div>
 
-            <div id="question" class="hide">
-                <div id="pregunta-header"></div>
-                <div id="pregunta"></div>
+            <div id="question-container" class="hide">
+                <div id="question-header"></div>
+                <div id="question"></div>
             </div>
 
             <div id="result" class="hide"></div>
@@ -43,7 +43,7 @@
 
             <div id="loading" class="hide">
                 <div class="container-loading">
-                    <div class="spinner-border text-primary" role="status"></div><br><br>
+                    <div class="spinner-border2 text-primary" role="status"></div><br><br>
                     <div class="text-loading">...Loading...</div>
                 </div>
             </div>
