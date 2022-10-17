@@ -36,14 +36,91 @@ footer {
 #navBar {
     height: var(--altura-header);
     display: flex;
-    align-items: stretch;
+   
 }
 
 .navBar-link {
-    color: white;
-    font-size: 30px;
-    cursor: pointer;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  
 }
+
+.navBar-link  {
+  --primary-color: rgb(250, 250, 250);
+  --hovered-color: #5181c1;
+  position: relative;
+  display: flex;
+  font-weight: 600;
+  font-size: 25px;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.navBar-link  p {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  color: var(--primary-color)
+  
+}
+
+.navBar-link::after {
+  position: absolute;
+  content: "";
+  width: 0;
+  left: 0;
+  bottom: -7px;
+  background: var(--hovered-color);
+  height: 2px;
+  transition: 0.3s ease-out;
+}
+
+.navBar-link p.navQuiz::before {
+  position: absolute;
+  content: "Quiz";
+  width: 0%;
+  inset: 0;
+  background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+  -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  overflow: hidden;
+  transition: 0.3s ease-out;
+}
+
+.navBar-link p.navClass::before {
+    position: absolute;
+    content: "Classification";
+    width: 0%;
+    inset: 0;
+    background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+    -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    overflow: hidden;
+    transition: 0.3s ease-out;
+  }
+
+  .navBar-link p.navStats::before {
+    position: absolute;
+    content: "Stats";
+    width: 0%;
+    inset: 0;
+    background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+    -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    overflow: hidden;
+    transition: 0.3s ease-out;
+  }
+
+.navBar-link:hover::after {
+  width: 100%;
+}
+
+.navBar-link:hover p::before {
+  width: 100%;
+}
+
 
 .logo-container {
     flex: 1;
@@ -61,7 +138,7 @@ footer {
 }
 
 .links-container {
-    font-family: 'Ribeye', cursive;
+    font-family: Ribeye, cursive;
     flex: 3;
     display: flex;
     justify-content: flex-end;

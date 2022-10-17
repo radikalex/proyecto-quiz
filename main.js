@@ -268,24 +268,29 @@ function sumCategoryData(currentData, newData) {
 /* --------------------------------------------- Lógica del resultado ---------------------------------- */
 
 function mostrarResultado() {
-    let gif_Url, clase_gif;
+    let gif_Url, clase_gif, textResult;
     const porcentajeAciertos = obtenerPorcentaje(nota, numPreguntas);
     switch(true) {
         case porcentajeAciertos < 50:
             gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088200159252/1-4.gif";
-            clase_gif = 'gif-resultado-small';
+            clase_gif = 'gif-resultado-small' ;
+            textResult= "What happened? ¡You can do it better! Do the test again and it will get better and better, keep trying"
+
             break;
         case porcentajeAciertos < 70:
             gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088627966102/5-6.gif";
             clase_gif = 'gif-resultado';
+            textResult= "Not bad, but keep trying!"
             break;
         case porcentajeAciertos < 90:
             gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089085157406/7-8.gif";
             clase_gif = 'gif-resultado';
+            textResult= "Hey, you almost made it... You're on the right track, keep trying"
             break;
         case porcentajeAciertos >= 90:
             gif_Url = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354089559097424/9-10.gif";
             clase_gif = 'gif-resultado';
+            textResult= "You've made it! congratulations, you have many other options, keep playing!"
             break;
         default:
             console.log('Algo no ha ido bien');
@@ -293,7 +298,7 @@ function mostrarResultado() {
     divResult.innerHTML =
     `
     <h1>Your score was ${nota}/${numPreguntas}</h1>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita ab sit repellendus fugit totam iusto ad soluta, quaerat in maxime nam repudiandae earum itaque velit cupiditate minima aut quas quam?</p>
+    <p>${textResult}</p>
     <img src="${gif_Url}" alt="asdf" class="${clase_gif}">
     <div class="botones-result">
         <button class="btn-comenzar" onclick="reiniciarTest()">Restart Quiz</button>
@@ -1098,4 +1103,3 @@ function fillUserSelect (select) {
 }
 
 createHomePage();
-goStats();
