@@ -580,7 +580,10 @@ th,
 td {
     text-align: center;
     border: 1px inset rgb(30, 144, 193);
+}
 
+th, td {
+    width: 16%;
 }
 
 .tables-container {
