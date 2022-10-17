@@ -782,8 +782,8 @@ const labelsColors = [
     "rgb(147, 156, 138)"
 ]
 
-let actualGraphic = 2;
-const numberGraphics = 3;
+let actualGraphic = 3;
+const numberGraphics = 4;
 
 function nextGraphic() {
     actualGraphic = (actualGraphic + 1) % numberGraphics;
@@ -791,7 +791,7 @@ function nextGraphic() {
 }
 
 function previousGraphic() {
-    actualGraphic = (actualGraphic + numberGraphics + 1) % numberGraphics;
+    actualGraphic = (actualGraphic + numberGraphics - 1) % numberGraphics;
     createGraphicsForUser();
 }
 
@@ -873,6 +873,10 @@ function createGraphicsForUser() {
             break;
         case 2:
             h1.innerHTML = `Numbers of quizs done for each numer of questions`;
+            createDoughnutGraphicData(parentDiv);
+            break;
+        case 3:
+            h1.innerHTML = `Percentage of correct answers for each numer of questions`;
             createHorizontalBarGraphicData(parentDiv);
             break;
         default:
@@ -944,8 +948,59 @@ function pieGraphic(canvas, info) {
     const myChart = new Chart(ctx, config);
 }
 
-function createHorizontalBarGraphicData(parentDiv) {
+function createDoughnutGraphicData(parentDiv) {
     const info = getUserDataQuizsDone();
+
+    const divBarContainer = document.createElement('div'); 
+    divBarContainer.className = "doughnut-container"
+
+    const divChart = document.createElement('div');
+    divChart.className = 'mychart-container-doughnut'
+    const canvas = document.createElement('canvas');
+    canvas.id = 'myChart';
+    doughnutGraphic(canvas, info);
+    divChart.appendChild(canvas);
+    divBarContainer.appendChild(divChart);
+    
+    parentDiv.appendChild(divBarContainer);
+}
+
+function doughnutGraphic(canvas, info) {
+    const ctx = canvas.getContext('2d');
+    const labels = info[0];
+    const dataValues = info[1];
+    const data = {
+        labels: labels,
+        datasets: [{
+            data: dataValues,
+            backgroundColor: labelsColors,
+        }]
+    };
+
+    const config = {
+        type: 'doughnut',
+        data: data,
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'left',
+                    display: true,
+                    labels: {
+                        font: {
+                            size: 16
+                        }
+                    }
+                } 
+            }
+        },
+    };
+    
+    const myChart = new Chart(ctx, config);
+}
+
+function createHorizontalBarGraphicData(parentDiv) {
+    const info = getPercentageQuizs();
 
     const divBarContainer = document.createElement('div'); 
     divBarContainer.className = "bar-container"
@@ -979,17 +1034,21 @@ function horizontalBarGraphic(canvas, info) {
         options: {
             indexAxis: 'y',
             scales: {
-                y: {
-                    beginAtZero: true
+                xAxis: {
+                    max: 100
                 },
-                x: {
+                y: {
                     ticks: {
-                        stepSize: 1
+                        min: 0,
+                        max: 100,
+                        font: {
+                            size: 16,
+                        }
                     }
-                }
+                },
             },
             labels: {
-                display: false
+                display: false,
             },
             maintainAspectRatio: false,
             plugins: {
@@ -1050,8 +1109,8 @@ function barGraphic(canvas, info) {
         data: data,
         options: {
             scales: {
-                y: {
-                    beginAtZero: true
+                yAxis: {
+                    max: 100
                 },
                 x: {
                     ticks: {
@@ -1117,7 +1176,10 @@ function getUserDataPercentageCategory() {
             }
         }
         for (let j = 0; j < result[1].length; j++) {
-            result[1][j] = getPercentage(result[1][j][0], result[1][j][0] + result[1][j][1]);
+            if(result[1][j][0] || result[1][j][1])
+                result[1][j] = getPercentage(result[1][j][0], result[1][j][0] + result[1][j][1]);
+            else
+                result[1][j] = 0;
         }
     } else {
         const indexUser = findUserByName(userName);
@@ -1184,7 +1246,80 @@ function getUserDataQuizsDone() {
         }
     }
 
-    console.log(result);
+    return result;
+}
+
+function getPercentageQuizs() {
+    const quizUsersData = JSON.parse(localStorage.getItem("quiz_data")).users || [];
+    const userName = document.getElementById('users-select').value;
+    const result = [['Quiz of 10 questions', 'Quiz of 20 questions', 'Quiz of 30 questions', 'Quiz of 40 questions', 'Quiz of 50 questions'], [[0,0], [0,0], [0,0], [0, 0], [0, 0]]]
+
+    if(userName === 'all') {
+        for (const user of quizUsersData) {
+            for (const quiz of user.quizsDone) {
+                switch (quiz.numQuestions) {
+                    case "10":
+                        result[1][0][0] += quiz.correct_answers;
+                        result[1][0][1] += quiz.incorrect_answers;
+                        break;
+                    case "20":
+                        result[1][1][0] += quiz.correct_answers;
+                        result[1][1][1] += quiz.incorrect_answers;
+                        break;
+                    case "30":
+                        result[1][2][0] += quiz.correct_answers;
+                        result[1][2][1] += quiz.incorrect_answers;
+                        break;
+                    case "40":
+                        result[1][3][0] += quiz.correct_answers;
+                        result[1][3][1] += quiz.incorrect_answers;
+                        break;
+                    case "50":
+                        result[1][4][0] += quiz.correct_answers;
+                        result[1][4][1] += quiz.incorrect_answers;
+                        break;
+                }
+            }
+        }
+        for (let i = 0; i < result[1].length; i++) {
+            if(result[1][i][0] || result[1][i][1])
+                result[1][i] = getPercentage( result[1][i][0],  result[1][i][0] +  result[1][i][1]);
+            else
+                result[1][i] = 0;
+        }
+    } else {
+        const indexUser = findUserByName(userName);
+        for (const quiz of quizUsersData[indexUser].quizsDone) {
+            switch(quiz.numQuestions) {
+                case "10":
+                    result[1][0][0] += quiz.correct_answers;
+                    result[1][0][1] += quiz.incorrect_answers;
+                    break;
+                case "20":
+                    result[1][1][0] += quiz.correct_answers;
+                    result[1][1][1] += quiz.incorrect_answers;
+                    break;
+                case "30":
+                    result[1][2][0] += quiz.correct_answers;
+                    result[1][2][1] += quiz.incorrect_answers;
+                    break;
+                case "40":
+                    result[1][3][0] += quiz.correct_answers;
+                    result[1][3][1] += quiz.incorrect_answers;
+                    break;
+                case "50":
+                    result[1][4][0] += quiz.correct_answers;
+                    result[1][4][1] += quiz.incorrect_answers;
+                    break;
+            }
+        }
+        for (let i = 0; i < result[1].length; i++) {
+            if(result[1][i][0] || result[1][i][1])
+                result[1][i] = getPercentage( result[1][i][0],  result[1][i][0] +  result[1][i][1]);
+            else
+                result[1][i] = 0;
+        }
+    }
 
     return result;
 }
@@ -1208,3 +1343,4 @@ function fillUserSelect (select) {
 }
 
 createHomePage();
+goStats();

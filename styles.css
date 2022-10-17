@@ -40,57 +40,57 @@ footer {
 #navBar {
     height: var(--altura-header);
     display: flex;
-   
+
 }
 
 .navBar-link {
-  padding: 0;
-  margin: 0;
-  border: none;
-  background: none;
-  
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+
 }
 
-.navBar-link  {
-  --primary-color: rgb(250, 250, 250);
-  --hovered-color: #5181c1;
-  position: relative;
-  display: flex;
-  font-weight: 600;
-  font-size: 25px;
-  gap: 0.5rem;
-  align-items: center;
+.navBar-link {
+    --primary-color: rgb(250, 250, 250);
+    --hovered-color: #5181c1;
+    position: relative;
+    display: flex;
+    font-weight: 600;
+    font-size: 25px;
+    gap: 0.5rem;
+    align-items: center;
 }
 
-.navBar-link  p {
-  margin: 0;
-  padding: 0;
-  position: relative;
-  color: var(--primary-color)
-  
+.navBar-link p {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    color: var(--primary-color)
 }
 
 .navBar-link::after {
-  position: absolute;
-  content: "";
-  width: 0;
-  left: 0;
-  bottom: -7px;
-  background: var(--hovered-color);
-  height: 2px;
-  transition: 0.3s ease-out;
+    position: absolute;
+    content: "";
+    width: 0;
+    left: 0;
+    bottom: -7px;
+    background: var(--hovered-color);
+    height: 2px;
+    transition: 0.3s ease-out;
 }
 
 .navBar-link p.navQuiz::before {
-  position: absolute;
-  content: "Quiz";
-  width: 0%;
-  inset: 0;
-  background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
-  -webkit-background-clip: text;
+    position: absolute;
+    content: "Quiz";
+    width: 0%;
+    inset: 0;
+    background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
     -webkit-text-fill-color: transparent;
-  overflow: hidden;
-  transition: 0.3s ease-out;
+    overflow: hidden;
+    transition: 0.3s ease-out;
 }
 
 .navBar-link p.navClass::before {
@@ -100,29 +100,31 @@ footer {
     inset: 0;
     background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
     -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
     overflow: hidden;
     transition: 0.3s ease-out;
-  }
+}
 
-  .navBar-link p.navStats::before {
+.navBar-link p.navStats::before {
     position: absolute;
     content: "Stats";
     width: 0%;
     inset: 0;
     background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
     -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
     overflow: hidden;
     transition: 0.3s ease-out;
-  }
+}
 
 .navBar-link:hover::after {
-  width: 100%;
+    width: 100%;
 }
 
 .navBar-link:hover p::before {
-  width: 100%;
+    width: 100%;
 }
 
 
@@ -359,12 +361,27 @@ main {
     align-self: center;
 }
 
+.mychart-container-doughnut {
+    width: 100%;
+    height: 33vh;
+    align-self: center;
+}
+
+
 .bar-container {
     width: 90%;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
+
+.doughnut-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 
 .color-label {
     height: 14px;
@@ -389,16 +406,16 @@ main {
 
 .spinner-border2 {
     width: 11.2px;
-   height: 11.2px;
-   border-radius: 11.2px;
-   box-shadow: 28px 0px 0 0 rgba(193,71,255,0.2), 22.7px 16.5px 0 0 rgba(193,71,255,0.4), 8.68px 26.6px 0 0 rgba(193,71,255,0.6), -8.68px 26.6px 0 0 rgba(193,71,255,0.8), -22.7px 16.5px 0 0 #c147ff;
-   animation: spinner-b87k6z 1s infinite linear;
+    height: 11.2px;
+    border-radius: 11.2px;
+    box-shadow: 28px 0px 0 0 rgba(193, 71, 255, 0.2), 22.7px 16.5px 0 0 rgba(193, 71, 255, 0.4), 8.68px 26.6px 0 0 rgba(193, 71, 255, 0.6), -8.68px 26.6px 0 0 rgba(193, 71, 255, 0.8), -22.7px 16.5px 0 0 #c147ff;
+    animation: spinner-b87k6z 1s infinite linear;
 }
 
 @keyframes spinner-b87k6z {
-   to {
-      transform: rotate(360deg);
-   }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .container-loading {
@@ -563,7 +580,7 @@ th,
 td {
     text-align: center;
     border: 1px inset rgb(30, 144, 193);
-    
+
 }
 
 .tables-container {
