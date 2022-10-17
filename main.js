@@ -98,7 +98,7 @@ function setQuestion(question) {
     if(question.type !== 'boolean') {
         answers = [question.correct_answer, ...question.incorrect_answers]
         shuffleAnswers(answers);
-        hexaColors = ['#E11B3E', '#1467CF', '#D69E01', '#28880D'];
+        hexaColors = ['#F781F3', '#01DFD7', '#00BFFF', '#8181F7'];
     } else {
         answers = ['True', 'False']
         hexaColors = ['#00FF48', '#FF0000'];
@@ -262,7 +262,7 @@ function showResults() {
         case correctPercentage < 50:
             gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088200159252/1-4.gif";
             gifClass = 'gif-result-small';
-            textResult= "What happened? ¡You can do it better! Do the test again and it will get better and better, keep trying"
+            textResult= "What happened? You can do it better! Do the test again and it will get better and better, keep trying"
             break;
         case correctPercentage < 70:
             gifUrl = "https://cdn.discordapp.com/attachments/1024006726866972752/1029354088627966102/5-6.gif";
