@@ -6,6 +6,7 @@ const loadingDiv = document.getElementById('loading')
 const mainDiV = document.getElementById('main');
 const classDiv = document.getElementById('classification');
 const statsDiv = document.getElementById('stats');
+const noDataDiv = document.getElementById('no-data');
 
 let score = 0;
 let numQuestions = 0;
@@ -58,12 +59,12 @@ function getQuestions() {
 
     axios
         .get(`https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}`)
-        .then((res) => {   
-                questions = res.data;
-                numQuestions = amount;
-                loadingDiv.classList.replace('loading', 'hide');
-                questionContainerDiv.classList.replace('hide', 'question');
-                setQuestion(questions.results[questionIndex]);
+        .then((res) => {
+            questions = res.data;
+            numQuestions = amount;
+            loadingDiv.classList.replace('loading', 'hide');
+            questionContainerDiv.classList.replace('hide', 'question');
+            setQuestion(questions.results[questionIndex]);
         })
         .catch((err) => console.error(err));
 }
@@ -169,7 +170,7 @@ function disabledAnswers() {
 }
 
 function correctAnswer(answer) {
-    return answer.trim() === decodeHtml(questions.results[questionIndex].correct_answer);
+    return answer.trim() === decodeHtml(questions.results[questionIndex].correct_answer.trim());
 }
 
 function decodeHtml(html) {
@@ -276,7 +277,7 @@ function showResults() {
             gifClass = 'gif-result';
             break;
         default:
-            console.log('Some error showing results.');
+            console.error('Some error showing results.');
     }
     resultDiv.innerHTML =
     `
@@ -313,6 +314,7 @@ function goMainPage() {
 function hideAllViews() {
     mainDiV.className = "hqr-container"
     classDiv.classList.replace('classification', 'hide')
+    noDataDiv.classList.replace('no-data', 'hide')
     resultDiv.classList.replace('result', 'hide')
     homeDiv.classList.replace('home', 'hide')
     questionContainerDiv.classList.replace('question', 'hide');
@@ -395,10 +397,15 @@ let actualTable = 0;
 const numberTables = 5;
 
 function goClassification() {
-    actualTable = 0;
-    hideAllViews();
-    classDiv.classList.replace('hide', 'classification');
-    createClassification();
+    if(quiz_data.users.length === 0) {
+        hideAllViews();
+        noDataDiv.classList.replace('hide', 'no-data');
+    } else {
+        actualTable = 0;
+        hideAllViews();
+        classDiv.classList.replace('hide', 'classification');
+        createClassification();
+    }
 }
 
 function createClassification() {
@@ -797,10 +804,15 @@ function previousGraphic() {
 }
 
 function goStats() {
-    actualGraphic = 0;
-    hideAllViews();
-    statsDiv.classList.replace('hide', 'stats');
-    createStats();
+    if(quiz_data.users.length === 0) {
+        hideAllViews();
+        noDataDiv.classList.replace('hide', 'no-data');
+    } else {
+        actualGraphic = 0;
+        hideAllViews();
+        statsDiv.classList.replace('hide', 'stats');
+        createStats();
+    }
 }
 
 function createStats() {
@@ -923,6 +935,9 @@ function legendOut(e) {
 
 function createPieGraphicData(parentDiv) {
     const info = getUserDataNumberEachCategory();
+
+    const divBarContainer = document.createElement('div'); 
+    divBarContainer.className = "pie-container"
     const divLegend = document.createElement('div'); 
     divLegend.className = "chart-legend";
     divLegend.id = "chart-legend";
@@ -935,7 +950,7 @@ function createPieGraphicData(parentDiv) {
             </div>
         `
     }
-    parentDiv.appendChild(divLegend);
+    divBarContainer.appendChild(divLegend);
 
     const divChart = document.createElement('div');
     divChart.className = 'mychart-container'
@@ -943,7 +958,9 @@ function createPieGraphicData(parentDiv) {
     canvas.id = 'myChart';
     pieGraphic(canvas, info);
     divChart.appendChild(canvas);
-    parentDiv.appendChild(divChart);
+    divBarContainer.appendChild(divChart);
+
+    parentDiv.appendChild(divBarContainer);
 }
 
 function pieGraphic(canvas, info) {
