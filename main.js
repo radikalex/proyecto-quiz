@@ -256,28 +256,24 @@ function sumCategoryData(currentData, newData) {
 /* --------------------------------------------- Result Logic ---------------------------------- */
 
 function showResults() {
-    let gifUrl, gifClass, textResult;
+    let gifUrl, gifClass;
     const correctPercentage = getPercentage(score, numQuestions);
     switch(true) {
         case correctPercentage < 50:
             gifUrl = "/assets/gifs/1-4.gif";
             gifClass = 'gif-result-small';
-            textResult= "What happened? You can do it better! Do the test again and it will get better and better, keep trying"
             break;
         case correctPercentage < 70:
             gifUrl = "/assets/gifs/5-6.gif";
             gifClass = 'gif-result';
-            textResult= "Not bad, but keep trying!"
             break;
         case correctPercentage < 90:
             gifUrl = "/assets/gifs/7-8.gif";
             gifClass = 'gif-result';
-            textResult= "Hey, you almost made it... You're on the right track, keep trying"
             break;
         case correctPercentage >= 90:
             gifUrl = "/assets/gifs/9-10.gif";
             gifClass = 'gif-result';
-            textResult= "You've made it! congratulations, you have many other options too, keep playing!"
             break;
         default:
             console.log('Some error showing results.');
@@ -285,7 +281,6 @@ function showResults() {
     resultDiv.innerHTML =
     `
     <h1>Your score was ${score}/${numQuestions}</h1>
-    <p>${textResult}</p>
     <img src="${gifUrl}" alt="asdf" class="${gifClass}">
     <div class="buttons-result">
         <button class="btn-quiz" onclick="restartQuiz()">Restart Quiz</button>
@@ -389,7 +384,7 @@ function createHomePage() {
                 <option value="hard">Hard</option>
             </select>
         </form>
-        <button class="btn-quiz" onclick="startQuiz(event)">Start</button>
+        <button class="btn-quiz mt-2 mb-2" onclick="startQuiz(event)">Start</button>
     `
 
 }
@@ -1388,22 +1383,6 @@ function fillUserSelect (select) {
             select.appendChild(option)
         }
     }
-}
-
-function handleLeave(evt, item, legend) {
-    legend.chart.data.datasets[0].backgroundColor.forEach( (color, index, colors) => {
-            colors[index] = color.replace(", 0.2)", ", 1)");
-        }
-    );
-    legend.chart.update();
-}
-
-function handleHover(evt, item, legend) {
-    legend.chart.data.datasets[0].backgroundColor.forEach( (color, index, colors) => {
-            colors[index] = index === item.index ? color : color.replace(", 1)", ", 0.2)"); 
-        }
-    );
-    legend.chart.update();
 }
 
 createHomePage();

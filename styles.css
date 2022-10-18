@@ -40,7 +40,6 @@ footer {
 #navBar {
     height: var(--altura-header);
     display: flex;
-
 }
 
 .navBar-link {
@@ -129,13 +128,14 @@ footer {
 
 
 .logo-container {
-    flex: 1;
+    flex: 1.5;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .logo {
+    margin-left: 30px;
     color: white;
     font-size: 50px;
     padding-right: 5%;
@@ -162,7 +162,7 @@ main {
 }
 
 .form-quiz {
-
+    margin: 20px auto;
     font-family: 'Comfortaa', cursive;
     font-size: 25px;
     text-align: center;
@@ -517,6 +517,7 @@ p {
     border-radius: 30px;
     width: 70%;
     min-height: 35vw;
+    margin: 5% auto;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -603,6 +604,7 @@ p {
 
 .classTable {
     width: 80%;
+    margin: 3% auto;
     text-align: center;
     background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
     box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
@@ -641,4 +643,114 @@ th, td {
 
 .textResult{
     font-family: 'Arima', cursive;
+}
+  
+/* Media Query for Laptops and Desktops */
+@media (max-width: 1280px){
+    :root {
+        --altura-header: 160px;
+        --altura-footer: 110px;
+    }
+
+    .form-quiz {
+        margin: 5% auto;
+        width: 50%;
+    }
+    
+}
+
+/* Media Query for Tablets Ipads portrait mode */
+@media (max-width: 1024px){
+    
+}
+
+/* Media Query for low resolution  Tablets, Ipads */
+@media (max-width: 767px) {
+    :root {
+        --altura-header: 160px;
+    }
+    #navBar {
+        display: flex;
+        flex-direction: column;
+    }
+    .links-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 0;
+        padding-right: 0;
+    }
+
+    footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .hqr-container {
+        width: 80%;
+    }
+
+    .form-quiz {
+        width: 60%;
+    }
+
+    .copyright {
+        font-size: 14px;
+    }
+
+    .answer {
+        border-radius: 50px;
+        margin: 2%;
+        width: 95%;
+        height: 50px;
+        font-size: 18px;
+    }
+
+    .next-question {
+        font-size: 17px;
+        width: 70%
+    }
+
+    .question h1 {
+        font-size: 25px;
+    }
+
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 480px) {
+    :root {
+        --altura-footer: 70px;
+    }
+
+    .hqr-container {
+        width: 90%;
+    }
+    .form-quiz {
+        width: 80%;
+    }
+
+    .copyright {
+        font-size: 12px;
+    }
+
+    .navBar-link {
+        font-size: 18px;
+    }
+
+    .answer {
+        height: 50px;
+        font-size: 16px;
+    }
+    
+    .next-question {
+        font-size: 15px;
+        width: 80%
+    }
+
+    .question h1 {
+        font-size: 20px;
+    }
 }
