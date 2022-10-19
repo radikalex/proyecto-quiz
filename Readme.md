@@ -3,17 +3,16 @@ Welcome to Our Quiz Game
 
 This project has been realized with
 
-·Dynamic DOM manipulation
-·Creating a SPA page for the questions
-·ES6 handling
-·Asynchrony.
-·HTML5 APIs
-·Local storage, graphics 
-·Project management from the beginning in a single shared repository (as contributors) on Github
-·clean code and best practices
-·Readme with explanation of the project.
-·Among many other things
-
+- Dynamic DOM manipulation
+- Creating a SPA page for the questions
+- ES6 handling
+- Asynchrony.
+- HTML5 APIs
+- Local storage, graphics 
+- Project management from the beginning in a single shared repository (as contributors) on Github
+- clean code and best practices
+- Readme with explanation of the project.
+- Among many other things
 
 
 ## ➣ Home 
@@ -54,3 +53,4 @@ It also has responsive, so you can see where you see it, in the best way, adapti
 ![image](./Assets/Readme/Responsive.gif)
 
 ## Enjoy!! 
+
